@@ -1,6 +1,8 @@
 package com.jedijoe.mushroominfection.Infection;
 
+import com.jedijoe.mushroominfection.InfectionDamage;
 import com.jedijoe.mushroominfection.MushroomInfection;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,6 +11,7 @@ import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -54,7 +57,37 @@ public class InfectionEvent {
             }
         });}
     }
-    
+
+    @SubscribeEvent public static void InfectionTickEffects(TickEvent.PlayerTickEvent event){
+        if(event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START){
+            PlayerEntity player = event.player;
+            player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                if(h.getInfectionProgress() >= 60){
+                    BlockPos CurrentPosition = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
+                    float temperature = player.world.getBiomeManager().getBiome(CurrentPosition).getTemperature(CurrentPosition);
+                    if(temperature > 0.9){player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 0, true, false));}
+                    else if(temperature < 0.275){player.addPotionEffect(new EffectInstance(Effects.SPEED, 5, 0, true, false));}
+                }
+                if(h.getInfectionProgress() >= 85){
+                    BlockPos CurrentPosition = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
+                    float temperature = player.world.getBiomeManager().getBiome(CurrentPosition).getTemperature(CurrentPosition);
+                    if(temperature > 0.275){player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 5, 0, true, false));}
+                    else {player.addPotionEffect(new EffectInstance(Effects.STRENGTH, 5, 0, true, false));}
+                }
+                if(h.getInfectionProgress() >= 95){
+                    player.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 1, true, false));
+                }
+                if(h.getInfectionProgress() >= 100){
+                    Random random = new Random();
+                    int randomValue = random.nextInt(100);
+                    if(randomValue < 1){
+                        player.attackEntityFrom(InfectionDamage.causeInfectionDamage(player), 1.0f);
+                    }
+                }
+            });
+
+        }
+    }
 
     @SubscribeEvent
     public static void InfectionChat(ServerChatEvent event){
@@ -110,10 +143,18 @@ public class InfectionEvent {
                     inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "There is something on your skin and you can't get it off.."), inflictedPlayer.getUniqueID());
                     break;
                 case 60:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You start feeling ill in hot environments, and better in cool ones.."), inflictedPlayer.getUniqueID());
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You start feeling ill in warm environments, and better in cool ones.."), inflictedPlayer.getUniqueID());
+                    break;
+                case 85:
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You begin to feel weak in all but the coldest environments.."), inflictedPlayer.getUniqueID());
+                    break;
+                case 95:
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "Your vision gets darker and darker.."), inflictedPlayer.getUniqueID());
+                    break;
+                case 100:
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You feel an overwhelming pain in your head..."), inflictedPlayer.getUniqueID());
                     break;
             }
         });
     }
-
 }
