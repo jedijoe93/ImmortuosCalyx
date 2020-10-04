@@ -9,9 +9,8 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 public class InfectionManager implements IInfectionManager, ICapabilityProvider, INBTSerializable<CompoundNBT> {
-    int infectionProgress;
+    protected int infectionProgress;
     public final LazyOptional<IInfectionManager> holder = LazyOptional.of(()->this);
     @Override
     public int getInfectionProgress() {
@@ -36,13 +35,13 @@ public class InfectionManager implements IInfectionManager, ICapabilityProvider,
 
     @Override
     public CompoundNBT serializeNBT() {
-        if (InfectionManagerCapability.INSTANCE == null){return new CompoundNBT();}else
-        return (CompoundNBT) InfectionManagerCapability.INSTANCE.getStorage().writeNBT(InfectionManagerCapability.INSTANCE, this, null);
+        CompoundNBT tag = new CompoundNBT();
+        tag.putInt("infectionProgression", infectionProgress);
+        return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        if(InfectionManagerCapability.INSTANCE != null)
-        InfectionManagerCapability.INSTANCE.getStorage().readNBT(InfectionManagerCapability.INSTANCE, this, null, nbt);
+        infectionProgress = nbt.getInt("infectionProgression");
     }
 }
