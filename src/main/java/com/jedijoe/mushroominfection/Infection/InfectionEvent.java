@@ -28,16 +28,17 @@ public class InfectionEvent {
 
     @SubscribeEvent
     public static void testTicker(TickEvent.PlayerTickEvent event){
-        if(event.side == LogicalSide.SERVER){
+        if(event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START){
         PlayerEntity entity = event.player;
         entity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h ->{
             if(entity.isCrouching()){h.setInfectionProgress(0);}
             else if(entity.isSwimming()){h.setInfectionProgress(1);}
             if(h.getInfectionProgress() >= 1){
-                Random rand = new Random();
-                if((1 + rand.nextFloat() * (100 - 1)) > 99.5){
-                h.addInfectionProgress(1);
-            }
+                h.addInfectionTimer(1);
+                if(h.getInfectionTimer() == 450){
+                    h.addInfectionProgress(1);
+                    h.addInfectionTimer(-450);
+                }
                 String msg = "Infection level: " + h.getInfectionProgress();
                 StringTextComponent stringTextComponent = new StringTextComponent(msg);
                 entity.sendStatusMessage(stringTextComponent, true);
