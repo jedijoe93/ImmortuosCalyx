@@ -22,6 +22,7 @@ public class MushroomInfection
     public static final String MOD_ID = "mushroominfection";
     public MushroomInfection() {
         // Register the setup method for modloading
+        Register.init();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);

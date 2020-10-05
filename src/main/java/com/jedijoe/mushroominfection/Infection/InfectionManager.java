@@ -14,9 +14,7 @@ public class InfectionManager implements IInfectionManager, ICapabilityProvider,
     protected int infectionTimer;
     public final LazyOptional<IInfectionManager> holder = LazyOptional.of(()->this);
     @Override
-    public int getInfectionProgress() {
-        return this.infectionProgress;
-    } //grabs the infection %
+    public int getInfectionProgress() { return this.infectionProgress; } //grabs the infection %
     @Override
     public void setInfectionProgress(int infectionProgress) { this.infectionProgress = infectionProgress; } //sets infection %. Maybe for a command later or something.
     @Override
