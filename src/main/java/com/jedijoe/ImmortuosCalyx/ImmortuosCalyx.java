@@ -1,11 +1,14 @@
 package com.jedijoe.ImmortuosCalyx;
 
 
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -40,7 +43,9 @@ public class ImmortuosCalyx
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        // some preinit code
+        DeferredWorkQueue.runLater(() -> {
+            GlobalEntityTypeAttributes.put(Register.INFECTEDHUMAN.get(), InfectedHumanEntity.customAttributes().create());
+        });
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

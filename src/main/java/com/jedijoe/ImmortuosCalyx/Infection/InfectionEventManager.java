@@ -1,22 +1,34 @@
 package com.jedijoe.ImmortuosCalyx.Infection;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
 import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
+import com.jedijoe.ImmortuosCalyx.Register;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Random;
@@ -122,6 +134,67 @@ public class InfectionEventManager {
             }
             if(infectedGrabber.get()){aggro.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{ //if surprise bool is activated, it means the aggressor player successfully infected someone. Removing part of the parasite and having it get on someone else.
                 h.addInfectionProgress(-5); });}  //because of that, symptoms are reduced.
+        }
+    }
+
+    @SubscribeEvent public static void InfectFromMobs(net.minecraftforge.event.entity.living.LivingAttackEvent event){
+        if(event.getSource().getTrueSource() instanceof InfectedHumanEntity && event.getEntityLiving() instanceof PlayerEntity){
+            int convert = 95;
+            int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
+            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
+            event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                Double resist = Double.valueOf(h.getResistance());
+                resistRateGrabber.addAndGet(resist);
+            });
+            float resist = (float) resistRateGrabber.get();
+            AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
+            int conversionThreshold = (int) ((convert - (protection*2))/resist); // creates mimimum score needed to not get infected
+            Random rand = new Random();
+            if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
+                event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+                    if (h.getInfectionProgress() == 0) {
+                        h.addInfectionProgress(1);
+                        infectedGrabber.set(true);
+                    } // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
+                });
+            }
+        }else if(event.getSource().getTrueSource() instanceof ZombieEntity && event.getEntityLiving() instanceof PlayerEntity){
+            int convert = 19;
+            int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
+            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
+            event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                Double resist = Double.valueOf(h.getResistance());
+                resistRateGrabber.addAndGet(resist);
+            });
+            float resist = (float) resistRateGrabber.get();
+            AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
+            int conversionThreshold = (int) ((convert - (protection*2))/resist); // creates mimimum score needed to not get infected
+            Random rand = new Random();
+            if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
+                event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+                    if (h.getInfectionProgress() == 0) {
+                        h.addInfectionProgress(1);
+                        infectedGrabber.set(true);
+                    } // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
+                });
+            }
+
+        }
+    }
+
+    @SubscribeEvent
+    public static void deathReplacement(LivingDeathEvent event){
+        if (event.getEntityLiving() instanceof PlayerEntity){
+            PlayerEntity deadPlayer = (PlayerEntity) event.getEntityLiving();
+            if(event.getSource().damageType == "infection"){
+                World world = deadPlayer.getEntityWorld();
+                if(!world.isRemote()){
+                    ServerWorld serverWorld = (ServerWorld) world;
+                    InfectedHumanEntity infectedHumanEntity = new InfectedHumanEntity(Register.INFECTEDHUMAN.get(), world);
+                    infectedHumanEntity.setPosition(deadPlayer.getPosX(), deadPlayer.getPosY(), deadPlayer.getPosZ());
+                    Register.INFECTEDHUMAN.get().spawn(serverWorld, new ItemStack(Items.AIR), null, deadPlayer.getPosition(), SpawnReason.TRIGGERED, true, false);
+                }
+            }
         }
     }
 

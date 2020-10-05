@@ -1,4 +1,5 @@
 {
   "death.attack.infection": "%1$s fell to the parasite",
-  "death.attack.internaldamage": "%1$s fell to internal organ damage"
+  "death.attack.internaldamage": "%1$s fell to internal organ damage",
+  "entity.immortuoscalyx.infectedhuman": "Infected Human"
 }
