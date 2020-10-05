@@ -1,6 +1,7 @@
 package com.jedijoe.mushroominfection;
 
 import com.jedijoe.mushroominfection.Blocks.InfectionScanner;
+import com.jedijoe.mushroominfection.Blocks.ScannerBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
@@ -19,4 +20,5 @@ public class Register {
         BLOCKITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());}
 
     public static final RegistryObject<Block> INFECTIONSCANNER = BLOCKS.register("infection_scanner", InfectionScanner::new);
+    public static final RegistryObject<Item> INFECTIONSCANNER_ITEM = BLOCKITEMS.register("infection_scanner", () -> new ScannerBlockItem(INFECTIONSCANNER.get()));
 }

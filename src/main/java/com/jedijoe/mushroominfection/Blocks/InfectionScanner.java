@@ -38,9 +38,7 @@ public class InfectionScanner extends Block {
     public void onEntityWalk(World world, BlockPos blockPos, Entity entity) {
         BlockState blockState = world.getBlockState(blockPos);
         if(!world.isRemote()){
-        blockState = redstoneStrength(entity, blockState);
-        String msg = blockState.get(POWERED).toString();
-        entity.sendMessage(new StringTextComponent(msg), entity.getUniqueID());}
+        blockState = redstoneStrength(entity, blockState);}
         world.setBlockState(blockPos, blockState.with(POWERED, blockState.get(POWERED)));
     }
 

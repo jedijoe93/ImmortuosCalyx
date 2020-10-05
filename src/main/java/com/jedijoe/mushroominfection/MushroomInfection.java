@@ -1,6 +1,9 @@
 package com.jedijoe.mushroominfection;
 
 
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -58,5 +61,11 @@ public class MushroomInfection
     public void onServerStarting(FMLServerStartingEvent event) {
 
     }
+    public static final ItemGroup TAB = new ItemGroup("MushroomInfection") {
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(Items.PUFFERFISH);
+        }
+    };
 
 }
