@@ -22,6 +22,7 @@ public class InfectionManagerCapability {
                 CompoundNBT tag = new CompoundNBT();
                 tag.putInt("infectionProgression", instance.getInfectionProgress());
                 tag.putInt("infectionTimer", instance.getInfectionTimer());
+                tag.putFloat("infectionResistance", instance.getResistance());
                 return tag;
             }
 
@@ -29,7 +30,8 @@ public class InfectionManagerCapability {
             public void readNBT(Capability<IInfectionManager> capability, IInfectionManager instance, Direction side, INBT nbt) {
                 CompoundNBT tag = (CompoundNBT) nbt;
                 instance.setInfectionProgress(tag.getInt("infectionProgression"));
-                instance.setInfectionProgress(tag.getInt("infectionTimer"));
+                instance.setInfectionTimer(tag.getInt("infectionTimer"));
+                instance.setResistance(tag.getFloat("infectionResistance"));
             }
         }, new Callable<InfectionManager>(){
             @Override

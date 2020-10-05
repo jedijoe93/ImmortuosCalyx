@@ -1,7 +1,8 @@
 package com.jedijoe.ImmortuosCalyx.Infection;
 
-import com.jedijoe.ImmortuosCalyx.InfectionDamage;
+import com.google.common.util.concurrent.AtomicDouble;
 import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.potion.EffectInstance;
@@ -23,11 +24,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Mod.EventBusSubscriber(modid = ImmortuosCalyx.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class InfectionEvent {
+public class InfectionEventManager {
 
     @SubscribeEvent
     public static void onAttachCapabilitiesEvent(AttachCapabilitiesEvent<Entity> event){
-        if(event.getObject() instanceof PlayerEntity){
+        if(event.getObject() instanceof LivingEntity){
             InfectionManager provider = new InfectionManager();
             event.addCapability(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infection"), provider);
         }
@@ -38,8 +39,6 @@ public class InfectionEvent {
         if(event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START){
         PlayerEntity player = event.player;
         player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h ->{
-            if(player.isCrouching()){h.addInfectionProgress(1);}//TEST LINE
-            else if(player.isSwimming()){h.setInfectionProgress(0);}//TEST LINE
             if(h.getInfectionProgress() >= 1){
                 h.addInfectionTimer(1);
                 if(h.getInfectionTimer() == 450){
@@ -104,10 +103,16 @@ public class InfectionEvent {
                 infectionRateGrabber.addAndGet(infectionProgression); // sets the atomic int equal to the infection % of the attacker
 
             });
+            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
+            target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                Double resist = Double.valueOf(h.getResistance());
+                resistRateGrabber.addAndGet(resist);
+            });
             AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
             int convert = infectionRateGrabber.intValue();// converts the atomic int into a normal int for better math
+            float resist = (float) resistRateGrabber.get();
             if(convert > 49){ // if the attacker's infection rate is at or above 50%
-                int conversionThreshold = (convert - (protection*2)); // creates mimimum score needed to not get infected
+                int conversionThreshold = (int) ((convert - (protection*2))/resist); // creates mimimum score needed to not get infected
                 Random rand = new Random();
                 if(conversionThreshold > rand.nextInt(100)){ // rolls for infection. If random value rolls below threshold, target is at risk of infection.
                     target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{

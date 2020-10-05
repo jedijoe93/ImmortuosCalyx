@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 public class InfectionManager implements IInfectionManager, ICapabilityProvider, INBTSerializable<CompoundNBT> {
     protected int infectionProgress;
     protected int infectionTimer;
+    protected float resistance;
     public final LazyOptional<IInfectionManager> holder = LazyOptional.of(()->this);
     @Override
     public int getInfectionProgress() { return this.infectionProgress; } //grabs the infection %
@@ -24,6 +25,18 @@ public class InfectionManager implements IInfectionManager, ICapabilityProvider,
     @Override
     public void addInfectionTimer(int Time) { this.infectionTimer += Time; }
 
+    @Override
+    public void setInfectionTimer(int Time) { infectionTimer = Time; }
+
+    @Override
+    public float getResistance() { return resistance; }
+
+    @Override
+    public void addResistance(float resistance) { this.resistance += resistance;}
+
+    @Override
+    public void setResistance(float resistance) { this.resistance = resistance;}
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -35,6 +48,7 @@ public class InfectionManager implements IInfectionManager, ICapabilityProvider,
         CompoundNBT tag = new CompoundNBT();
         tag.putInt("infectionProgression", infectionProgress);
         tag.putInt("infectionTimer", infectionTimer);
+        tag.putFloat("infectionResistance", resistance);
         return tag;
     }
 
@@ -42,5 +56,6 @@ public class InfectionManager implements IInfectionManager, ICapabilityProvider,
     public void deserializeNBT(CompoundNBT nbt) {
         infectionProgress = nbt.getInt("infectionProgression");
         infectionTimer = nbt.getInt("infectionTimer");
+        resistance = nbt.getFloat("infectionResistance");
     }
 }

@@ -1,3 +1,4 @@
 {
-  "death.attack.infection": "%1$s fell to the parasite"
+  "death.attack.infection": "%1$s fell to the parasite",
+  "death.attack.internaldamage": "%1$s fell to internal organ damage"
 }

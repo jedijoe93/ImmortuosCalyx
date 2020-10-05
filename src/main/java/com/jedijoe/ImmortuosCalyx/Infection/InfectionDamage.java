@@ -1,4 +1,4 @@
-package com.jedijoe.ImmortuosCalyx;
+package com.jedijoe.ImmortuosCalyx.Infection;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
