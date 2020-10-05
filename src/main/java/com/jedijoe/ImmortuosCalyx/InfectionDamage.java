@@ -1,4 +1,4 @@
-package com.jedijoe.mushroominfection;
+package com.jedijoe.ImmortuosCalyx;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;

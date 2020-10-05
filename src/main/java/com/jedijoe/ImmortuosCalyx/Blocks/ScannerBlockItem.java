@@ -1,6 +1,6 @@
-package com.jedijoe.mushroominfection.Blocks;
+package com.jedijoe.ImmortuosCalyx.Blocks;
 
-import com.jedijoe.mushroominfection.MushroomInfection;
+import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ScannerBlockItem extends BlockItem {
     public ScannerBlockItem(Block block) {
-        super(block, new Item.Properties().group(MushroomInfection.TAB));
+        super(block, new Item.Properties().group(ImmortuosCalyx.TAB));
     }
 
     @Override

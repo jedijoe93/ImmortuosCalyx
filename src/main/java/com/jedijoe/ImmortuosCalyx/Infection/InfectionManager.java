@@ -1,4 +1,4 @@
-package com.jedijoe.mushroominfection.Infection;
+package com.jedijoe.ImmortuosCalyx.Infection;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;

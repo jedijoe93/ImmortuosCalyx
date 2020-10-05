@@ -1,4 +1,4 @@
-package com.jedijoe.mushroominfection.Infection;
+package com.jedijoe.ImmortuosCalyx.Infection;
 
 public interface IInfectionManager {
      int getInfectionProgress();

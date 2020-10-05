@@ -1,17 +1,13 @@
-package com.jedijoe.mushroominfection.Infection;
+package com.jedijoe.ImmortuosCalyx.Infection;
 
-import com.jedijoe.mushroominfection.InfectionDamage;
-import com.jedijoe.mushroominfection.MushroomInfection;
-import net.minecraft.block.Blocks;
+import com.jedijoe.ImmortuosCalyx.InfectionDamage;
+import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -26,14 +22,14 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Mod.EventBusSubscriber(modid = MushroomInfection.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = ImmortuosCalyx.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class InfectionEvent {
 
     @SubscribeEvent
     public static void onAttachCapabilitiesEvent(AttachCapabilitiesEvent<Entity> event){
         if(event.getObject() instanceof PlayerEntity){
             InfectionManager provider = new InfectionManager();
-            event.addCapability(new ResourceLocation(MushroomInfection.MOD_ID, "infection"), provider);
+            event.addCapability(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infection"), provider);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.jedijoe.mushroominfection;
+package com.jedijoe.ImmortuosCalyx;
 
 
 import net.minecraft.item.ItemGroup;
@@ -17,13 +17,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("mushroominfection")
-public class MushroomInfection
+@Mod("immortuoscalyx")
+public class ImmortuosCalyx
 {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
-    public static final String MOD_ID = "mushroominfection";
-    public MushroomInfection() {
+    public static final String MOD_ID = "immortuoscalyx";
+    public ImmortuosCalyx() {
         // Register the setup method for modloading
         Register.init();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -61,7 +61,7 @@ public class MushroomInfection
     public void onServerStarting(FMLServerStartingEvent event) {
 
     }
-    public static final ItemGroup TAB = new ItemGroup("MushroomInfection") {
+    public static final ItemGroup TAB = new ItemGroup("ImmortuosCalyx") {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(Items.PUFFERFISH);

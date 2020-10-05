@@ -1,6 +1,6 @@
-package com.jedijoe.mushroominfection.Blocks;
+package com.jedijoe.ImmortuosCalyx.Blocks;
 
-import com.jedijoe.mushroominfection.Infection.InfectionManagerCapability;
+import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -9,7 +9,6 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
