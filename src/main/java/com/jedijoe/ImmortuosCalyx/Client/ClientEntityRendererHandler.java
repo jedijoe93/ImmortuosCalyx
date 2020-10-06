@@ -14,5 +14,6 @@ public class ClientEntityRendererHandler {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event){
         RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDHUMAN.get(), RenderInfectedHumanEntity::new);
+        RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDDIVER.get(), RenderInfectedDiverEntity::new);
     }
 }

@@ -1,7 +1,9 @@
 package com.jedijoe.ImmortuosCalyx;
 
 
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -45,6 +47,7 @@ public class ImmortuosCalyx
     {
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(Register.INFECTEDHUMAN.get(), InfectedHumanEntity.customAttributes().create());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDDIVER.get(), InfectedDiverEntity.customAttributes().create());
         });
     }
 

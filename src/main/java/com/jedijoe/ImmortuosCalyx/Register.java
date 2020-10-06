@@ -2,6 +2,7 @@ package com.jedijoe.ImmortuosCalyx;
 
 import com.jedijoe.ImmortuosCalyx.Blocks.InfectionScanner;
 import com.jedijoe.ImmortuosCalyx.Blocks.ScannerBlockItem;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
 import com.jedijoe.ImmortuosCalyx.Items.BaseItems;
 import net.minecraft.block.Block;
@@ -35,5 +36,7 @@ public class Register {
     public static final RegistryObject<Item> IMMORTUOSCALYXEGGS = ITEMS.register("immortuoseggs", () -> new BaseItems(TextFormatting.RED + "Infects humans with the Immortuos Calyx Parasite, guaranteed unless they have resistance", "", "", ""));
 
     public static final RegistryObject<EntityType<InfectedHumanEntity>> INFECTEDHUMAN = ENTITY_TYPES.register("infectedhuman", () -> EntityType.Builder.create(InfectedHumanEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infectedhuman").toString()));
+    public static final RegistryObject<EntityType<InfectedDiverEntity>> INFECTEDDIVER = ENTITY_TYPES.register("infecteddiver", () -> EntityType.Builder.create(InfectedDiverEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infecteddiver").toString()));
+
 }
 

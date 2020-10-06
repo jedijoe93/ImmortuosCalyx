@@ -5,12 +5,17 @@ import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.IPacket;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nonnull;
 
 @Mod.EventBusSubscriber(modid = ImmortuosCalyx.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class NonInfectionEvents {
@@ -89,7 +94,6 @@ public class NonInfectionEvents {
         }
     }
 
-
     private static void AntiParasiticCure(Entity target) {
         target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
             if(h.getInfectionProgress() <= 40){//is only effective in curing in dormant phase
@@ -113,4 +117,6 @@ public class NonInfectionEvents {
             if(h.getInfectionProgress() < 0) h.setInfectionProgress(0);
         });
     }
+
+
 }

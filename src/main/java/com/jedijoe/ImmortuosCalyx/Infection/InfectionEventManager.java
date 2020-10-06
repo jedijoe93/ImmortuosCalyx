@@ -1,6 +1,7 @@
 package com.jedijoe.ImmortuosCalyx.Infection;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
 import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Register;
@@ -138,7 +139,7 @@ public class InfectionEventManager {
     }
 
     @SubscribeEvent public static void InfectFromMobs(net.minecraftforge.event.entity.living.LivingAttackEvent event){
-        if(event.getSource().getTrueSource() instanceof InfectedHumanEntity && event.getEntityLiving() instanceof PlayerEntity){
+        if((event.getSource().getTrueSource() instanceof InfectedHumanEntity || event.getSource().getTrueSource() instanceof InfectedDiverEntity) && event.getEntityLiving() instanceof PlayerEntity){
             int convert = 95;
             int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
             AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
