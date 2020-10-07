@@ -25,7 +25,6 @@ public class NonInfectionEvents {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if(player.isCrouching()) {CalyxideCure(player); event.getItemStack().shrink(1);}
 
-
         }
     }
 
@@ -43,7 +42,7 @@ public class NonInfectionEvents {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if(player.isCrouching()) {
                 player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                    if(h.getInfectionProgress() == 0){h.addInfectionProgress(1);}
+                    if(h.getInfectionProgress() == 0){h.addInfectionProgress(100);}
                 });
                 event.getItemStack().shrink(1);}
         }

@@ -2,6 +2,7 @@ package com.jedijoe.ImmortuosCalyx.Client;
 
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
+import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -13,8 +14,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderInfectedDiverEntity extends BipedRenderer<InfectedDiverEntity, BipedModel<InfectedDiverEntity>> {
     public RenderInfectedDiverEntity(EntityRendererManager renderManager) {
-        super(renderManager, new Model(), 1F);
+        super(renderManager, new Model(), 0.5F);
     }
+    protected final static ResourceLocation TEXTURE = new ResourceLocation(ImmortuosCalyx.MOD_ID, "textures/entity/infecteddiver.png");
 
 
     private static class Model extends BipedModel<InfectedDiverEntity> {
@@ -29,10 +31,6 @@ public class RenderInfectedDiverEntity extends BipedRenderer<InfectedDiverEntity
 
     @Override
     public ResourceLocation getEntityTexture(InfectedDiverEntity entity) {
-        Minecraft mc = Minecraft.getInstance();
-        if(!(mc.getRenderViewEntity() instanceof AbstractClientPlayerEntity)){
-            return DefaultPlayerSkin.getDefaultSkin(entity.getUniqueID());
-        }
-        return ((AbstractClientPlayerEntity) mc.getRenderViewEntity()).getLocationSkin();
+    return TEXTURE;
     }
 }

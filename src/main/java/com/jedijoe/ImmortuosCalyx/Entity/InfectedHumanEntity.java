@@ -19,6 +19,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -67,16 +68,17 @@ public class InfectedHumanEntity extends MonsterEntity {
         return 5 + this.world.rand.nextInt(5);
     }
 
+    ResourceLocation Ambient = new ResourceLocation("immortuoscalyx", "infected_idle");
+    ResourceLocation Death = new ResourceLocation("immortuoscalyx", "infected_hurt");
+    ResourceLocation Hurt = new ResourceLocation("immortuoscalyx", "infected_death");
     @Override
-    protected SoundEvent getAmbientSound() { return SoundEvents.ENTITY_ZOMBIE_AMBIENT; }
+    protected SoundEvent getAmbientSound() { return new SoundEvent(Ambient); }
 
     @Override
-    protected SoundEvent getDeathSound() { return SoundEvents.ENTITY_ZOMBIE_DEATH; }
+    protected SoundEvent getDeathSound() {return new SoundEvent(Death); }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_ZOMBIE_HURT;
-    }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return new SoundEvent(Hurt); }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
