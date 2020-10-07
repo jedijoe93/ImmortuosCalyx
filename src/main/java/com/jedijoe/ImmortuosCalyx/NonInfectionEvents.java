@@ -6,6 +6,7 @@ import com.jedijoe.ImmortuosCalyx.Infection.InfectionDamage;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,10 +21,12 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -40,7 +43,7 @@ public class NonInfectionEvents {
         if(event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.CALYXANIDE.get())){
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if(player.isCrouching()) {CalyxideCure(player); event.getItemStack().shrink(1);}
-            if(!event.getWorld().isRemote()) {event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+            if(event.getSide() == LogicalSide.SERVER){event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
 
 
         }
@@ -51,7 +54,7 @@ public class NonInfectionEvents {
         if(event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.GENERALANTIPARASITIC.get())){
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if(player.isCrouching()) {AntiParasiticCure(player); event.getItemStack().shrink(1);}
-            if(!event.getWorld().isRemote()) {event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+            if(event.getSide() == LogicalSide.SERVER){event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
         }
     }
 
@@ -64,7 +67,7 @@ public class NonInfectionEvents {
                     if(h.getInfectionProgress() == 0){h.addInfectionProgress(1);}
                 });
                 event.getItemStack().shrink(1);}
-            if(!event.getWorld().isRemote()) {event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+            if(event.getSide() == LogicalSide.SERVER){event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
 
         }
     }
@@ -77,7 +80,7 @@ public class NonInfectionEvents {
             user.getHeldItemMainhand().shrink(1);
             CalyxideCure(target);
             event.setCanceled(true);
-            if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+            if(!event.getTarget().world.isRemote()){target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
 
         }
     }
@@ -90,7 +93,7 @@ public class NonInfectionEvents {
             user.getHeldItemMainhand().shrink(1);
             AntiParasiticCure(target);
             event.setCanceled(true);
-            if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+            if(!event.getTarget().world.isRemote()){target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
         }
     }
     @SubscribeEvent
@@ -103,7 +106,7 @@ public class NonInfectionEvents {
                 if(h.getInfectionProgress() == 0){h.addInfectionProgress(1);}
             });
             event.setCanceled(true);
-            if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+            if(!event.getTarget().world.isRemote()){target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
             if(target instanceof InfectedDiverEntity || target instanceof InfectedHumanEntity){((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.WITHER, 500, 25, true, false));}
         }
     }
@@ -129,7 +132,7 @@ public class NonInfectionEvents {
                 olditemstack.shrink(1);
                 ItemStack itemStack = new ItemStack(Register.GENERALANTIPARASITIC.get());
                 player.inventory.addItemStackToInventory(itemStack);
-                if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent1, SoundCategory.PLAYERS, 1f, 1f);}
+                if(!event.getTarget().world.isRemote()){target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.EXTRACT.get(), SoundCategory.PLAYERS, 1f, 1f);}
             }
         }else if((event.getTarget() instanceof InfectedHumanEntity) || (event.getTarget() instanceof InfectedDiverEntity) && event.getEntity() instanceof PlayerEntity){
             PlayerEntity player = (PlayerEntity) event.getEntity();
@@ -142,6 +145,7 @@ public class NonInfectionEvents {
             }
         }
     }
+
 
     private static void AntiParasiticCure(Entity target) {
         target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{

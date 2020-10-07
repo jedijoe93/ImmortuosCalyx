@@ -1,8 +1,11 @@
 package com.jedijoe.ImmortuosCalyx.Entity;
 
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
+import com.jedijoe.ImmortuosCalyx.Register;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -10,7 +13,9 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.DrownedEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.ZombifiedPiglinEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.DamageSource;
@@ -22,6 +27,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 public class InfectedDiverEntity extends DrownedEntity {
 
@@ -33,7 +40,7 @@ public class InfectedDiverEntity extends DrownedEntity {
     public static AttributeModifierMap.MutableAttribute customAttributes() {
         return MobEntity.func_233666_p_()
                 .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2D)
                 .createMutableAttribute(Attributes.ZOMBIE_SPAWN_REINFORCEMENTS, 0D);
     }
@@ -43,8 +50,14 @@ public class InfectedDiverEntity extends DrownedEntity {
         super.registerGoals();
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
-        //this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.3D, false));
 
+    }
+
+
+    @Override
+    public boolean shouldAttack(@Nullable LivingEntity p_204714_1_) {
+        if(p_204714_1_ != null){
+        return true;}else return false;
     }
 
     @Override
@@ -52,17 +65,14 @@ public class InfectedDiverEntity extends DrownedEntity {
         return 5 + this.world.rand.nextInt(7);
     }
 
-    ResourceLocation Ambient = new ResourceLocation("immortuoscalyx", "infected_idle");
-    ResourceLocation Death = new ResourceLocation("immortuoscalyx", "infected_hurt");
-    ResourceLocation Hurt = new ResourceLocation("immortuoscalyx", "infected_death");
     @Override
-    protected SoundEvent getAmbientSound() { return new SoundEvent(Ambient); }
+    protected SoundEvent getAmbientSound() { return Register.AMBIENT.get(); }
 
     @Override
-    protected SoundEvent getDeathSound() {return new SoundEvent(Death); }
+    protected SoundEvent getDeathSound() {return Register.DEATH.get(); }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return new SoundEvent(Hurt); }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return Register.HURT.get(); }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
@@ -78,11 +88,5 @@ public class InfectedDiverEntity extends DrownedEntity {
         this.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
             if(h.getInfectionProgress() < 100) h.setInfectionProgress(100);
         });
-    }
-
-    @Nonnull
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

@@ -1,6 +1,7 @@
 package com.jedijoe.ImmortuosCalyx.Entity;
 
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
+import com.jedijoe.ImmortuosCalyx.Register;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierManager;
@@ -42,7 +43,7 @@ public class InfectedHumanEntity extends MonsterEntity {
     public static AttributeModifierMap.MutableAttribute customAttributes() {
         return MobEntity.func_233666_p_()
                 .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2D);
     }
 
@@ -68,17 +69,15 @@ public class InfectedHumanEntity extends MonsterEntity {
         return 5 + this.world.rand.nextInt(5);
     }
 
-    ResourceLocation Ambient = new ResourceLocation("immortuoscalyx", "infected_idle");
-    ResourceLocation Death = new ResourceLocation("immortuoscalyx", "infected_hurt");
-    ResourceLocation Hurt = new ResourceLocation("immortuoscalyx", "infected_death");
-    @Override
-    protected SoundEvent getAmbientSound() { return new SoundEvent(Ambient); }
 
     @Override
-    protected SoundEvent getDeathSound() {return new SoundEvent(Death); }
+    protected SoundEvent getAmbientSound() { return Register.AMBIENT.get(); }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return new SoundEvent(Hurt); }
+    protected SoundEvent getDeathSound() {return Register.DEATH.get(); }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return Register.HURT.get(); }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {

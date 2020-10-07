@@ -17,9 +17,9 @@ license="All rights reserved"
 # The modid of the mod
 modId="immortuoscalyx" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="${file.jarVersion}" #mandatory
+version="1.0" #mandatory
  # A display name for the mod
-displayName="Mushroom Infection" #mandatory
+displayName="Immortuos Calyx" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="http://myurl.me/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -32,7 +32,7 @@ credits="The forge team, and the MMD community" #optional
 authors="jedijoe__" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A new parasitic infection has been found on raw meats and mushrooms. Be wary, these parasites are quite dangerous.
+A new parasitic infection has spread across the world. Try not to get infected...
 
 Inspired by the Velonaceps Calyx from Barotrauma
 '''

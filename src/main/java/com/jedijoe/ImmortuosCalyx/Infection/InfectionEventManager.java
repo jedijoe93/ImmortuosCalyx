@@ -14,9 +14,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.Item;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -26,7 +29,9 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.RegistryObject;
@@ -96,12 +101,14 @@ public class InfectionEventManager {
 
         }
     }
-
+    static ResourceLocation Ambient = new ResourceLocation("immortuoscalyx", "infected_idle");
+    static ResourceLocation Hurt = new ResourceLocation("immortuoscalyx", "infected_hurt");
     @SubscribeEvent
     public static void InfectionChat(ServerChatEvent event){
         PlayerEntity player = event.getPlayer();
         player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-            if(h.getInfectionProgress() >= 40) event.setCanceled(true); //if the player's infection is @ or above 40%, they can no longer speak in text chat.
+            if(h.getInfectionProgress() >= 40) {event.setCanceled(true);//if the player's infection is @ or above 40%, they can no longer speak in text chat.
+            if(!player.getEntityWorld().isRemote())player.world.playSound(null, player.getPosition(), Register.AMBIENT.get(), SoundCategory.PLAYERS, 0.5f, 2f);}
         });
     }
 
@@ -134,7 +141,8 @@ public class InfectionEventManager {
                 }
             }
             if(infectedGrabber.get()){aggro.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{ //if surprise bool is activated, it means the aggressor player successfully infected someone. Removing part of the parasite and having it get on someone else.
-                h.addInfectionProgress(-5); });}  //because of that, symptoms are reduced.
+                h.addInfectionProgress(-5); });//because of that, symptoms are reduced.
+                if(!aggro.getEntityWorld().isRemote)aggro.world.playSound(null, aggro.getPosition(), Register.HURT.get(), SoundCategory.PLAYERS, 1f, 1.2f);}
         }
     }
 
@@ -195,6 +203,23 @@ public class InfectionEventManager {
                     infectedHumanEntity.setPosition(deadPlayer.getPosX(), deadPlayer.getPosY(), deadPlayer.getPosZ());
                     Register.INFECTEDHUMAN.get().spawn(serverWorld, new ItemStack(Items.AIR), null, deadPlayer.getPosition(), SpawnReason.TRIGGERED, true, false);
                 }
+            }
+        }
+    }
+    static Item[] rawItem = new Item[]{Items.BEEF, Items.RABBIT, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.COD, Items.SALMON};
+    @SubscribeEvent
+    public static void rawFood(LivingEntityUseItemEvent.Finish event){
+        if(event.getEntity() instanceof PlayerEntity){
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            boolean raw = false;
+            for(Item item : rawItem){if(item.equals(event.getItem().getItem())){raw = true; break;}}
+            if(raw){
+                player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                    if(h.getInfectionProgress() == 0){
+                        Random rand = new Random();
+                        if(rand.nextInt(100) < (10/(h.getResistance()))) h.setInfectionProgress(1);
+                    }
+                });
             }
         }
     }
