@@ -72,7 +72,7 @@ public class ImmortuosCalyx
     public static final ItemGroup TAB = new ItemGroup("ImmortuosCalyx") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(Items.PUFFERFISH);
+            return new ItemStack(Register.IMMORTUOSCALYXEGGS.get());
         }
     };
 

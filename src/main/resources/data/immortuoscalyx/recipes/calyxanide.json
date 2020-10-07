@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " g ",
+    "GiO",
+    " g "
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "G": {
+      "item": "immortuoscalyx:antiparasitic"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "O": {
+      "item": "immortuoscalyx:immortuoseggs"
+    }
+  },
+  "result": {
+    "item": "immortuoscalyx:calyxanide",
+    "count": 1
+  }
+}

@@ -6,10 +6,14 @@ import com.jedijoe.ImmortuosCalyx.Infection.InfectionDamage;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.EffectType;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -42,8 +46,6 @@ public class NonInfectionEvents {
         }
     }
 
-
-
     @SubscribeEvent
     public static void selfUseAntiParasite(PlayerInteractEvent.RightClickItem event){
         if(event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.GENERALANTIPARASITIC.get())){
@@ -59,7 +61,7 @@ public class NonInfectionEvents {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if(player.isCrouching()) {
                 player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                    if(h.getInfectionProgress() == 0){h.addInfectionProgress(100);}
+                    if(h.getInfectionProgress() == 0){h.addInfectionProgress(1);}
                 });
                 event.getItemStack().shrink(1);}
             if(!event.getWorld().isRemote()) {event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
@@ -102,6 +104,7 @@ public class NonInfectionEvents {
             });
             event.setCanceled(true);
             if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+            if(target instanceof InfectedDiverEntity || target instanceof InfectedHumanEntity){((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.WITHER, 500, 25, true, false));}
         }
     }
 
