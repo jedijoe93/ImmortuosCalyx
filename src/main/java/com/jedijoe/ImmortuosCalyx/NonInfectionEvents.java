@@ -1,11 +1,19 @@
 package com.jedijoe.ImmortuosCalyx;
 
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionDamage;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -19,20 +27,29 @@ import javax.annotation.Nonnull;
 
 @Mod.EventBusSubscriber(modid = ImmortuosCalyx.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class NonInfectionEvents {
+    static ResourceLocation injectSounds = new ResourceLocation("immortuoscalyx", "inject");
+    static ResourceLocation extractSounds = new ResourceLocation("immortuoscalyx", "extract");
+    static SoundEvent soundEvent = new SoundEvent(injectSounds);
+    static SoundEvent soundEvent1 = new SoundEvent(extractSounds);
     @SubscribeEvent
     public static void selfUseCalyxide(PlayerInteractEvent.RightClickItem event){
         if(event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.CALYXANIDE.get())){
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if(player.isCrouching()) {CalyxideCure(player); event.getItemStack().shrink(1);}
+            if(!event.getWorld().isRemote()) {event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+
 
         }
     }
+
+
 
     @SubscribeEvent
     public static void selfUseAntiParasite(PlayerInteractEvent.RightClickItem event){
         if(event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.GENERALANTIPARASITIC.get())){
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if(player.isCrouching()) {AntiParasiticCure(player); event.getItemStack().shrink(1);}
+            if(!event.getWorld().isRemote()) {event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
         }
     }
 
@@ -45,6 +62,8 @@ public class NonInfectionEvents {
                     if(h.getInfectionProgress() == 0){h.addInfectionProgress(100);}
                 });
                 event.getItemStack().shrink(1);}
+            if(!event.getWorld().isRemote()) {event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+
         }
     }
 
@@ -56,6 +75,8 @@ public class NonInfectionEvents {
             user.getHeldItemMainhand().shrink(1);
             CalyxideCure(target);
             event.setCanceled(true);
+            if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
+
         }
     }
 
@@ -67,6 +88,7 @@ public class NonInfectionEvents {
             user.getHeldItemMainhand().shrink(1);
             AntiParasiticCure(target);
             event.setCanceled(true);
+            if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
         }
     }
     @SubscribeEvent
@@ -79,6 +101,7 @@ public class NonInfectionEvents {
                 if(h.getInfectionProgress() == 0){h.addInfectionProgress(1);}
             });
             event.setCanceled(true);
+            if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent, SoundCategory.PLAYERS, 1f, 1f);}
         }
     }
 
@@ -90,6 +113,30 @@ public class NonInfectionEvents {
                 h.addResistance(-0.001f);
                 if(h.getResistance() < 1){h.setResistance(1);}
             });
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerExtract(AttackEntityEvent event){
+        Entity target = event.getTarget();
+        if(event.getTarget() instanceof SlimeEntity && event.getEntity() instanceof PlayerEntity){
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            if(player.getHeldItemMainhand().getItem().equals(Register.SYRINGE.get().getItem())){
+                ItemStack olditemstack = player.getHeldItemMainhand();
+                olditemstack.shrink(1);
+                ItemStack itemStack = new ItemStack(Register.GENERALANTIPARASITIC.get());
+                player.inventory.addItemStackToInventory(itemStack);
+                if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent1, SoundCategory.PLAYERS, 1f, 1f);}
+            }
+        }else if((event.getTarget() instanceof InfectedHumanEntity) || (event.getTarget() instanceof InfectedDiverEntity) && event.getEntity() instanceof PlayerEntity){
+            PlayerEntity player = (PlayerEntity) event.getEntity();
+            if(player.getHeldItemMainhand().getItem().equals(Register.SYRINGE.get().getItem())){
+                ItemStack olditemstack = player.getHeldItemMainhand();
+                olditemstack.shrink(1);
+                ItemStack itemStack = new ItemStack(Register.IMMORTUOSCALYXEGGS.get());
+                player.inventory.addItemStackToInventory(itemStack);
+                if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent1, SoundCategory.PLAYERS, 1f, 1f);}
+            }
         }
     }
 

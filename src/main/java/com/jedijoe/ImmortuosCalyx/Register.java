@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -33,7 +34,8 @@ public class Register {
 
     public static final RegistryObject<Item> CALYXANIDE = ITEMS.register("calyxanide", () -> new BaseItems(TextFormatting.BLUE + "Kills the Immortuos Calyx Parasite", TextFormatting.BLUE + "May need multiple doses for later stage infections", TextFormatting.RED + "May be lethal if the parasite is ingrained too heavily", ""));
     public static final RegistryObject<Item> GENERALANTIPARASITIC = ITEMS.register("antiparasitic", () -> new BaseItems(TextFormatting.BLUE + "Strengthens Immune System to the Immortuos Calyx Parasite", TextFormatting.BLUE + "Does not make you immune. May also kill early forms of infection", TextFormatting.RED + "Will cause light organ damage", ""));
-    public static final RegistryObject<Item> IMMORTUOSCALYXEGGS = ITEMS.register("immortuoseggs", () -> new BaseItems(TextFormatting.RED + "Infects humans with the Immortuos Calyx Parasite, guaranteed unless they have resistance", "", "", ""));
+    public static final RegistryObject<Item> IMMORTUOSCALYXEGGS = ITEMS.register("immortuoseggs", () -> new BaseItems(TextFormatting.RED + "Infects humans with the Immortuos Calyx Parasite,", "", "", ""));
+    public static final RegistryObject<Item> SYRINGE = ITEMS.register("syringe", () -> new BaseItems(TextFormatting.GRAY + "Allows you to harvest biomaterials necessary to make medicines", "", "", ""));
 
     public static final RegistryObject<EntityType<InfectedHumanEntity>> INFECTEDHUMAN = ENTITY_TYPES.register("infectedhuman", () -> EntityType.Builder.create(InfectedHumanEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infectedhuman").toString()));
     public static final RegistryObject<EntityType<InfectedDiverEntity>> INFECTEDDIVER = ENTITY_TYPES.register("infecteddiver", () -> EntityType.Builder.create(InfectedDiverEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infecteddiver").toString()));

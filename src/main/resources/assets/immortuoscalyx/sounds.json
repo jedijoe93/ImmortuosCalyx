@@ -1,5 +1,7 @@
 {
     "infected_idle": { "sounds":["immortuoscalyx:infectedidle1", "immortuoscalyx:infectedidle2"]},
 	"infected_hurt": { "sounds":["immortuoscalyx:infectedhurt1", "immortuoscalyx:infectedhurt2"]},
-	"infected_death": { "sounds":["immortuoscalyx:infecteddeath1", "immortuoscalyx:infecteddeath2"]}
+	"infected_death": { "sounds":["immortuoscalyx:infecteddeath1", "immortuoscalyx:infecteddeath2"]},
+	"inject": {"sounds": ["immortuoscalyx:inject"]},
+	"extract": {"sounds": ["immortuoscalyx:extract"]}
 }
