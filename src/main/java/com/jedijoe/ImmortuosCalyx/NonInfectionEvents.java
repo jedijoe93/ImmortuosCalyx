@@ -172,9 +172,9 @@ public class NonInfectionEvents {
                     PlayerEntity a = (PlayerEntity) event.getEntity();
 
                     t.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
-                        a.sendMessage(new StringTextComponent(a.getScoreboardName() + "'s stats"), a.getUniqueID());
-                        a.sendMessage(new StringTextComponent("Health: " + a.getHealth()), a.getUniqueID());
-                        a.sendMessage(new StringTextComponent("Food: " + a.getFoodStats().getFoodLevel()), a.getUniqueID());
+                        a.sendMessage(new StringTextComponent(t.getScoreboardName() + "'s stats"), a.getUniqueID());
+                        a.sendMessage(new StringTextComponent("Health: " + t.getHealth()), a.getUniqueID());
+                        a.sendMessage(new StringTextComponent("Food: " + t.getFoodStats().getFoodLevel()), a.getUniqueID());
                         a.sendMessage(new StringTextComponent("Infection Level: " + h.getInfectionProgress() + "%"), a.getUniqueID());
                         a.sendMessage(new StringTextComponent("Resistance Multiplier: " + h.getResistance()), a.getUniqueID());
                     });
