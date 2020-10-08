@@ -64,9 +64,6 @@ public class InfectionEventManager {
                     h.addInfectionTimer(-450);
                     EffectController(event.player);
                 }
-                String msg = "Infection level: " + h.getInfectionProgress(); //THIS ENTIRE SET OF CODE IS DEBUG TO VIEW INFECTION LEVELS AT WORK
-                StringTextComponent stringTextComponent = new StringTextComponent(msg);
-                player.sendStatusMessage(stringTextComponent, true);
             }
         });}
     }

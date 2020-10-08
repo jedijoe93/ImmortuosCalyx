@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -146,6 +147,45 @@ public class NonInfectionEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void selfScan(PlayerInteractEvent.RightClickItem event){
+        if(event.getSide() == LogicalSide.SERVER) {
+            if (event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.SCANNER.get()) && event.getEntity().isCrouching()) {
+                PlayerEntity p = (PlayerEntity) event.getEntity();
+                event.getEntity().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+                    p.sendMessage(new StringTextComponent(p.getScoreboardName() + "'s stats"), p.getUniqueID());
+                    p.sendMessage(new StringTextComponent("Saturation level: " + p.getFoodStats().getSaturationLevel()), p.getUniqueID());
+                    p.sendMessage(new StringTextComponent("Infection Level: " + h.getInfectionProgress() + "%"), p.getUniqueID());
+                    p.sendMessage(new StringTextComponent("Resistance Multiplier: " + h.getResistance()), p.getUniqueID());
+                });
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void Scan(AttackEntityEvent event){
+        if(!event.getEntity().getEntityWorld().isRemote()) {
+            if (event.getEntity() instanceof PlayerEntity && ((PlayerEntity) event.getEntity()).getHeldItemMainhand().getItem().equals(Register.SCANNER.get())) {
+                event.setCanceled(true);
+                if (event.getTarget() instanceof PlayerEntity) {
+                    PlayerEntity t = (PlayerEntity) event.getTarget();
+                    PlayerEntity a = (PlayerEntity) event.getEntity();
+
+                    t.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+                        a.sendMessage(new StringTextComponent(a.getScoreboardName() + "'s stats"), a.getUniqueID());
+                        a.sendMessage(new StringTextComponent("Health: " + a.getHealth()), a.getUniqueID());
+                        a.sendMessage(new StringTextComponent("Food: " + a.getFoodStats().getFoodLevel()), a.getUniqueID());
+                        a.sendMessage(new StringTextComponent("Infection Level: " + h.getInfectionProgress() + "%"), a.getUniqueID());
+                        a.sendMessage(new StringTextComponent("Resistance Multiplier: " + h.getResistance()), a.getUniqueID());
+                    });
+                } else if (event.getTarget() instanceof InfectedHumanEntity || event.getTarget() instanceof InfectedDiverEntity) {
+                    event.getEntity().sendMessage(new StringTextComponent("Target completely infected."), event.getEntity().getUniqueID());
+                } else {
+                    event.getEntity().sendMessage(new StringTextComponent("Invalid Target."), event.getEntity().getUniqueID());
+                }
+            }
+        }
+    }
 
     private static void AntiParasiticCure(Entity target) {
         target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
