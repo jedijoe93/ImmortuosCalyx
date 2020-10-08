@@ -20,7 +20,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class DiverSpawns {
 
     @SubscribeEvent
-    public static void stu(BiomeLoadingEvent event){
+    public static void DiverSpawner(BiomeLoadingEvent event){
         if(event.getCategory() == Biome.Category.OCEAN){
         MobSpawnInfo.Spawners spawners = new MobSpawnInfo.Spawners(Register.INFECTEDDIVER.get(), 1,1,1);
         event.getSpawns().withSpawner(EntityClassification.MONSTER, spawners);}
