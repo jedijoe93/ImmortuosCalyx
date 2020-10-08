@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " # ",
+    "SIS",
+    " C "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:observer"
+    },
+    "S": {
+      "item": "minecraft:smooth_stone"
+    },
+    "I": {
+      "item": "minecraft:ink_sac"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    }
+  },
+  "result": {
+    "item": "immortuoscalyx:infection_scanner",
+    "count": 1
+  }
+}
+
+
+
+
+
