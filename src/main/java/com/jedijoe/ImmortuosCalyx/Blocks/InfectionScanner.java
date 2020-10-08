@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class InfectionScanner extends Block {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public InfectionScanner() {
-        super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE).setRequiresTool());
+        super(Properties.create(Material.ROCK).hardnessAndResistance(3f).harvestTool(ToolType.PICKAXE).setRequiresTool());
         this.setDefaultState(getDefaultState().with(POWERED, false));
     }
 
