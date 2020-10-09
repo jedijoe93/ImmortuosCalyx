@@ -1,6 +1,8 @@
 package com.jedijoe.ImmortuosCalyx;
 
 
+import com.jedijoe.ImmortuosCalyx.Configs.ConfigHelper;
+import com.jedijoe.ImmortuosCalyx.Configs.Configuration;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -12,6 +14,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -28,7 +31,9 @@ public class ImmortuosCalyx
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "immortuoscalyx";
+    public static Configuration config;
     public ImmortuosCalyx() {
+        config = ConfigHelper.register(ModConfig.Type.SERVER, Configuration::new);
         // Register the setup method for modloading
         Register.init();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
