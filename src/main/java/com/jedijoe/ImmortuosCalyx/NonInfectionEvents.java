@@ -35,10 +35,6 @@ import javax.annotation.Nonnull;
 
 @Mod.EventBusSubscriber(modid = ImmortuosCalyx.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class NonInfectionEvents {
-    static ResourceLocation injectSounds = new ResourceLocation("immortuoscalyx", "inject");
-    static ResourceLocation extractSounds = new ResourceLocation("immortuoscalyx", "extract");
-    static SoundEvent soundEvent = new SoundEvent(injectSounds);
-    static SoundEvent soundEvent1 = new SoundEvent(extractSounds);
     @SubscribeEvent
     public static void selfUseCalyxide(PlayerInteractEvent.RightClickItem event){
         if(event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.CALYXANIDE.get())){
@@ -65,7 +61,7 @@ public class NonInfectionEvents {
             PlayerEntity player = (PlayerEntity) event.getEntity();
             if(player.isCrouching()) {
                 player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                    if(h.getInfectionProgress() == 0){h.addInfectionProgress(1);}
+                    if(h.getInfectionProgress() == 0){h.addInfectionProgress(ImmortuosCalyx.config.EGGINFECTIONSTART.get());}
                 });
                 event.getItemStack().shrink(1);}
             if(event.getSide() == LogicalSide.SERVER){event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
@@ -104,7 +100,7 @@ public class NonInfectionEvents {
         if(user.getHeldItemMainhand().getItem().equals(Register.IMMORTUOSCALYXEGGS.get())){
             user.getHeldItemMainhand().shrink(1);
             target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                if(h.getInfectionProgress() == 0){h.addInfectionProgress(1);}
+                if(h.getInfectionProgress() == 0){h.addInfectionProgress(ImmortuosCalyx.config.EGGINFECTIONSTART.get());}
             });
             event.setCanceled(true);
             if(!event.getTarget().world.isRemote()){target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
@@ -117,7 +113,7 @@ public class NonInfectionEvents {
         if(event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START) {
             PlayerEntity playerEntity = event.player;
             playerEntity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                h.addResistance(-0.001f);
+                h.addResistance(-0.001);
                 if(h.getResistance() < 1){h.setResistance(1);}
             });
         }
@@ -142,7 +138,7 @@ public class NonInfectionEvents {
                 olditemstack.shrink(1);
                 ItemStack itemStack = new ItemStack(Register.IMMORTUOSCALYXEGGS.get());
                 player.inventory.addItemStackToInventory(itemStack);
-                if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), soundEvent1, SoundCategory.PLAYERS, 1f, 1f);}
+                if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.EXTRACT.get(), SoundCategory.PLAYERS, 1f, 1f);}
             }
         }
     }
@@ -193,7 +189,7 @@ public class NonInfectionEvents {
                 h.addInfectionProgress(-10);
             }
             if(h.getInfectionProgress() < 0) h.setInfectionProgress(0);
-            h.setResistance(5);
+            h.setResistance(ImmortuosCalyx.config.RESISTGIVENAP.get());
         });
         target.attackEntityFrom(InternalOrganDamage.causeInternalDamage(target), 2f);  //divide the reduced infection rate by 5, multiply by 4. 100 infection rate -> 25/5 = 5, * 4 = 20. Vanilla instant kill.
     }

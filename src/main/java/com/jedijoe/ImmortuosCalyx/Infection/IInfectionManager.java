@@ -7,7 +7,7 @@ public interface IInfectionManager {
      int getInfectionTimer();
      void addInfectionTimer(int Time);
      void setInfectionTimer(int Time);
-     float getResistance();
-     void addResistance(float resistance);
-     void setResistance(float resistance);
+     double getResistance();
+     void addResistance(double resistance);
+     void setResistance(double resistance);
 }

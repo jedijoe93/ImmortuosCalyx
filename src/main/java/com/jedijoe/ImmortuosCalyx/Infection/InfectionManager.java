@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 public class InfectionManager implements IInfectionManager, ICapabilityProvider, INBTSerializable<CompoundNBT> {
     protected int infectionProgress;
     protected int infectionTimer;
-    protected float resistance;
+    protected double resistance;
     public final LazyOptional<IInfectionManager> holder = LazyOptional.of(()->this);
     @Override
     public int getInfectionProgress() { return this.infectionProgress; } //grabs the infection %
@@ -29,13 +29,13 @@ public class InfectionManager implements IInfectionManager, ICapabilityProvider,
     public void setInfectionTimer(int Time) { infectionTimer = Time; }
 
     @Override
-    public float getResistance() { return resistance; }
+    public double getResistance() { return resistance; }
 
     @Override
-    public void addResistance(float resistance) { this.resistance += resistance;}
+    public void addResistance(double resistance) { this.resistance += resistance;}
 
     @Override
-    public void setResistance(float resistance) { this.resistance = resistance;}
+    public void setResistance(double resistance) { this.resistance = resistance;}
 
     @Nonnull
     @Override
@@ -48,7 +48,7 @@ public class InfectionManager implements IInfectionManager, ICapabilityProvider,
         CompoundNBT tag = new CompoundNBT();
         tag.putInt("infectionProgression", infectionProgress);
         tag.putInt("infectionTimer", infectionTimer);
-        tag.putFloat("infectionResistance", resistance);
+        tag.putDouble("infectionResistance", resistance);
         return tag;
     }
 

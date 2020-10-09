@@ -22,8 +22,8 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Boolean> COLDSTRENGTH;
     public ConfigHelper.ConfigValueListener<Boolean> BLINDNESS;
 
-    public ConfigHelper.ConfigValueListener<Float> ARMORRESISTMULTIPLIER;
-    public ConfigHelper.ConfigValueListener<Float> RESISTGIVENAP;
+    public ConfigHelper.ConfigValueListener<Double> ARMORRESISTMULTIPLIER;
+    public ConfigHelper.ConfigValueListener<Double> RESISTGIVENAP;
     public ConfigHelper.ConfigValueListener<Integer> PLAYERINFECTIONTHRESHOLD;
     public ConfigHelper.ConfigValueListener<Integer> INFECTEDENTITYINFECTIONVALUE;
     public ConfigHelper.ConfigValueListener<Integer> ZOMBIEINFECTIONVALUE;
@@ -33,6 +33,7 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Integer> INFECTIONDAMAGE;
     public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONRELIEF;
     public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONAMOUNT;
+    public ConfigHelper.ConfigValueListener<Integer> INFECTIONTIMER;
 
     public Configuration(ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber){
         builder.comment("Modify Infection Components").push(SCATEGORY_SYMPTOMS);
@@ -46,9 +47,9 @@ public class Configuration {
         this.BLINDNESS = subscriber.subscribe(builder.comment("Enables or disables the blindness of players at 95% infection").define("theColdDarkAbyss", true));
         builder.pop();
 
-        builder.comment("Modify Contagion Components - you're given freedom, but nonsensical stats will break things.").push(SCATEGORY_CONTAGION);
-        this.ARMORRESISTMULTIPLIER = subscriber.subscribe(builder.comment("Changes the multiplier that controls how much defense to the infection armor gives").define("armorInfectResist", 2f));
-        this.RESISTGIVENAP = subscriber.subscribe(builder.comment("Effects how much resistance general antiparasitic gives the player when used").define("playerResistanceGiven", 6f));
+        builder.comment("Modify Contagion Components - you're given as much freedom as I can give, but some things absolutely break the code. Keep decimals where there are decimals, use no decimals where there aren't decimals.").push(SCATEGORY_CONTAGION);
+        this.ARMORRESISTMULTIPLIER = subscriber.subscribe(builder.comment("Changes the multiplier that controls how much defense to the infection armor gives").defineInRange("armorInfectResist", 2d, 0d, 100d));
+        this.RESISTGIVENAP = subscriber.subscribe(builder.comment("Effects how much resistance general antiparasitic gives the player when used").defineInRange("playerResistanceGiven", 6d, 1d, 100d));
         this.PLAYERINFECTIONTHRESHOLD = subscriber.subscribe(builder.comment("Changes where players can start infecting each other in infection percentage").define("playerContagionThreshold", 50));
         this.INFECTEDENTITYINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by fully converted entities.").define("infectedEntityInfection", 95));
         this.ZOMBIEINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by ZombieEntity and it's derivatives").define("zombieEntityInfection", 20));
@@ -60,7 +61,8 @@ public class Configuration {
         this.INFECTIONDAMAGE = subscriber.subscribe(builder.comment("Changes how much damage the infection deals to players at 100%").define("infectionDamage", 1));
         this.PVPCONTAGIONRELIEF = subscriber.subscribe(builder.comment("Changes how much infecting other players relieves a player of the infection").define("infectionRelief", 5));
         this.PVPCONTAGIONAMOUNT = subscriber.subscribe(builder.comment("Changes how much you infect a player by infecting them via pvp").define("infectionPVPContagion", 1));
-
+        this.INFECTIONTIMER = subscriber.subscribe(builder.comment("Changes how long it takes for the infection to go up 1% in ticks (assuming no lag, 20 per second)").define("infectionTicker", 450));
+        builder.pop();
 
     }
 

@@ -59,9 +59,10 @@ public class InfectionEventManager {
         player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h ->{
             if(h.getInfectionProgress() >= 1){
                 h.addInfectionTimer(1);
-                if(h.getInfectionTimer() == 450){
+                int timer = ImmortuosCalyx.config.INFECTIONTIMER.get();
+                if(h.getInfectionTimer() >= timer){
                     h.addInfectionProgress(1);
-                    h.addInfectionTimer(-450);
+                    h.addInfectionTimer(-timer);
                     EffectController(event.player);
                 }
             }
@@ -75,42 +76,41 @@ public class InfectionEventManager {
                 if(h.getInfectionProgress() >= 60){
                     BlockPos CurrentPosition = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
                     float temperature = player.world.getBiomeManager().getBiome(CurrentPosition).getTemperature(CurrentPosition);
-                    if(temperature > 0.9){player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 0, true, false));}
-                    else if(temperature < 0.275){player.addPotionEffect(new EffectInstance(Effects.SPEED, 5, 0, true, false));}
+                    if(temperature > 0.9 && ImmortuosCalyx.config.HEATSLOW.get()){player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 0, true, false));}
+                    else if(temperature < 0.275 && ImmortuosCalyx.config.COLDFAST.get()){player.addPotionEffect(new EffectInstance(Effects.SPEED, 5, 0, true, false));}
                 }
                 if(h.getInfectionProgress() >= 85){
                     BlockPos CurrentPosition = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
                     float temperature = player.world.getBiomeManager().getBiome(CurrentPosition).getTemperature(CurrentPosition);
-                    if(temperature > 0.275){player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 5, 0, true, false));}
-                    else {player.addPotionEffect(new EffectInstance(Effects.STRENGTH, 5, 0, true, false));}
+                    if(temperature > 0.275 && ImmortuosCalyx.config.WARMWEAKNESS.get()){player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 5, 0, true, false));}
+                    else if (temperature <= 0.275 && ImmortuosCalyx.config.COLDSTRENGTH.get()) {player.addPotionEffect(new EffectInstance(Effects.STRENGTH, 5, 0, true, false));}
                 }
-                if(h.getInfectionProgress() >= 95){
+                if(h.getInfectionProgress() >= 95 && ImmortuosCalyx.config.BLINDNESS.get()){
                     player.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 1, true, false));
                 }
                 if(h.getInfectionProgress() >= 100){
                     Random random = new Random();
                     int randomValue = random.nextInt(100);
-                    if(randomValue < 1){
-                        player.attackEntityFrom(InfectionDamage.causeInfectionDamage(player), 1.0f);
+                    if(randomValue < 1 && ImmortuosCalyx.config.INFECTIONDAMAGE.get() > 0){
+                        player.attackEntityFrom(InfectionDamage.causeInfectionDamage(player), ImmortuosCalyx.config.INFECTIONDAMAGE.get());
                     }
                 }
             });
 
         }
     }
-    static ResourceLocation Ambient = new ResourceLocation("immortuoscalyx", "infected_idle");
-    static ResourceLocation Hurt = new ResourceLocation("immortuoscalyx", "infected_hurt");
+
     @SubscribeEvent
     public static void InfectionChat(ServerChatEvent event){
         PlayerEntity player = event.getPlayer();
         player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-            if(h.getInfectionProgress() >= 40) {event.setCanceled(true);//if the player's infection is @ or above 40%, they can no longer speak in text chat.
-            if(!player.getEntityWorld().isRemote())player.world.playSound(null, player.getPosition(), Register.AMBIENT.get(), SoundCategory.PLAYERS, 0.5f, 2f);}
+            if(h.getInfectionProgress() >= 40 && ImmortuosCalyx.config.ANTICHAT.get()) {event.setCanceled(true);};//if the player's infection is @ or above 40%, they can no longer speak in text chat.
+            if(!player.getEntityWorld().isRemote() && ImmortuosCalyx.config.INFECTEDCHATNOISE.get())player.world.playSound(null, player.getPosition(), Register.AMBIENT.get(), SoundCategory.PLAYERS, 0.5f, 2f);
         });
     }
 
     @SubscribeEvent public static void InfectOtherPlayer(AttackEntityEvent event){
-        if(event.getEntity() instanceof PlayerEntity && event.getTarget() instanceof PlayerEntity){
+        if(event.getEntity() instanceof PlayerEntity && event.getTarget() instanceof PlayerEntity && ImmortuosCalyx.config.PVPCONTAGION.get()){
             PlayerEntity target = (PlayerEntity) event.getTarget(); //the player who got hit
             PlayerEntity aggro = (PlayerEntity) event.getEntity(); //the player that hit
             int protection = target.getTotalArmorValue(); //grabs the armor value of the target
@@ -127,34 +127,37 @@ public class InfectionEventManager {
             });
             AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
             int convert = infectionRateGrabber.intValue();// converts the atomic int into a normal int for better math
-            float resist = (float) resistRateGrabber.get();
-            if(convert > 49){ // if the attacker's infection rate is at or above 50%
-                int conversionThreshold = (int) ((convert - (protection*2))/resist); // creates mimimum score needed to not get infected
+            double resist = (double) resistRateGrabber.get();
+            int threshold = ImmortuosCalyx.config.PLAYERINFECTIONTHRESHOLD.get();
+            double armorInfectResist = ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get();
+            if(convert > threshold){ // if the attacker's infection rate is at or above the threshold.
+                int conversionThreshold = (int) ((convert - (protection*armorInfectResist))/resist); // creates mimimum score needed to not get infected
                 Random rand = new Random();
                 if(conversionThreshold > rand.nextInt(100)){ // rolls for infection. If random value rolls below threshold, target is at risk of infection.
                     target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                        if(h.getInfectionProgress() == 0){h.addInfectionProgress(1); infectedGrabber.set(true);} // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
+                        int infect = ImmortuosCalyx.config.PVPCONTAGIONAMOUNT.get();
+                        if(h.getInfectionProgress() == 0){h.addInfectionProgress(infect); infectedGrabber.set(true);} // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
                     });
                 }
             }
             if(infectedGrabber.get()){aggro.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{ //if surprise bool is activated, it means the aggressor player successfully infected someone. Removing part of the parasite and having it get on someone else.
-                h.addInfectionProgress(-5); });//because of that, symptoms are reduced.
+                h.addInfectionProgress(-ImmortuosCalyx.config.PVPCONTAGIONRELIEF.get()); });//because of that, symptoms are reduced.
                 if(!aggro.getEntityWorld().isRemote)aggro.world.playSound(null, aggro.getPosition(), Register.HURT.get(), SoundCategory.PLAYERS, 1f, 1.2f);}
         }
     }
 
     @SubscribeEvent public static void InfectFromMobs(net.minecraftforge.event.entity.living.LivingAttackEvent event){
         if((event.getSource().getTrueSource() instanceof InfectedHumanEntity || event.getSource().getTrueSource() instanceof InfectedDiverEntity) && event.getEntityLiving() instanceof PlayerEntity){
-            int convert = 95;
+            int convert = ImmortuosCalyx.config.INFECTEDENTITYINFECTIONVALUE.get();
             int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
             AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
             event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
                 Double resist = Double.valueOf(h.getResistance());
                 resistRateGrabber.addAndGet(resist);
             });
-            float resist = (float) resistRateGrabber.get();
+            double resist = resistRateGrabber.get();
             AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
-            int conversionThreshold = (int) ((convert - (protection*2))/resist); // creates mimimum score needed to not get infected
+            int conversionThreshold = (int) ((convert - (protection*ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get()))/resist); // creates mimimum score needed to not get infected
             Random rand = new Random();
             if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
                 event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
@@ -165,16 +168,16 @@ public class InfectionEventManager {
                 });
             }
         }else if(event.getSource().getTrueSource() instanceof ZombieEntity && event.getEntityLiving() instanceof PlayerEntity){
-            int convert = 19;
+            int convert = ImmortuosCalyx.config.ZOMBIEINFECTIONVALUE.get();
             int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
             AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
             event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
                 Double resist = Double.valueOf(h.getResistance());
                 resistRateGrabber.addAndGet(resist);
             });
-            float resist = (float) resistRateGrabber.get();
+            double resist = resistRateGrabber.get();
             AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
-            int conversionThreshold = (int) ((convert - (protection*2))/resist); // creates mimimum score needed to not get infected
+            int conversionThreshold = (int) ((convert - (protection*ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get()))/resist) ; // creates mimimum score needed to not get infected
             Random rand = new Random();
             if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
                 event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
@@ -214,7 +217,7 @@ public class InfectionEventManager {
                 player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
                     if(h.getInfectionProgress() == 0){
                         Random rand = new Random();
-                        if(rand.nextInt(100) < (10/(h.getResistance()))) h.setInfectionProgress(1);
+                        if(rand.nextInt(100) < (ImmortuosCalyx.config.RAWFOODINFECTIONVALUE.get()/(h.getResistance()))) h.setInfectionProgress(1);
                     }
                 });
             }
