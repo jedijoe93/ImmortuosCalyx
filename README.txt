@@ -10,3 +10,6 @@ Videos and media: Sure
 Stealing the mod and calling it your own: No
 Using bits of code I made in your own mod: When I make it open source (Soon) Sure. If you're using a full file or something though, it'd be nice if you gave me credit in the relevant files.
 Porting the mod to newer versions: If this doesn't update for about two major updates, I don't mind. Unless I changed this permission line.
+
+
+Uses ConfigHelper from commoble
