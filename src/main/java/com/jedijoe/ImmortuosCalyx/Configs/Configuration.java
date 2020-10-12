@@ -2,6 +2,7 @@ package com.jedijoe.ImmortuosCalyx.Configs;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import com.jedijoe.ImmortuosCalyx.InternalOrganDamage;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
 
@@ -11,6 +12,7 @@ import java.nio.file.Path;
 public class Configuration {
     public static final String SCATEGORY_SYMPTOMS = "symptoms";
     public static final String SCATEGORY_CONTAGION = "contagionMechanics";
+    public static final String SCATEGORY_EFFECTS = "effectPercentages";
     public static final String SCATEGORY_OTHERS = "others";
 
     public ConfigHelper.ConfigValueListener<Boolean> ANTICHAT;
@@ -24,7 +26,6 @@ public class Configuration {
 
     public ConfigHelper.ConfigValueListener<Double> ARMORRESISTMULTIPLIER;
     public ConfigHelper.ConfigValueListener<Double> RESISTGIVENAP;
-    public ConfigHelper.ConfigValueListener<Integer> PLAYERINFECTIONTHRESHOLD;
     public ConfigHelper.ConfigValueListener<Integer> INFECTEDENTITYINFECTIONVALUE;
     public ConfigHelper.ConfigValueListener<Integer> ZOMBIEINFECTIONVALUE;
     public ConfigHelper.ConfigValueListener<Integer> RAWFOODINFECTIONVALUE;
@@ -34,6 +35,16 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONRELIEF;
     public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONAMOUNT;
     public ConfigHelper.ConfigValueListener<Integer> INFECTIONTIMER;
+
+    public ConfigHelper.ConfigValueListener<Integer> EFFECTMESSAGEONE;
+    public ConfigHelper.ConfigValueListener<Integer> EFFECTMESSAGETWO;
+    public ConfigHelper.ConfigValueListener<Integer> EFFECTCHAT;
+    public ConfigHelper.ConfigValueListener<Integer> PLAYERINFECTIONTHRESHOLD;
+    public ConfigHelper.ConfigValueListener<Integer> EFFECTSPEED;
+    public ConfigHelper.ConfigValueListener<Integer> EFFECTSTRENGTH;
+    public ConfigHelper.ConfigValueListener<Integer> EFFECTBLIND;
+    public ConfigHelper.ConfigValueListener<Integer> EFFECTDAMAGE;
+
 
     public Configuration(ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber){
         builder.comment("Modify Infection Components").push(SCATEGORY_SYMPTOMS);
@@ -50,11 +61,20 @@ public class Configuration {
         builder.comment("Modify Contagion Components - you're given as much freedom as I can give, but some things absolutely break the code. Keep decimals where there are decimals, use no decimals where there aren't decimals.").push(SCATEGORY_CONTAGION);
         this.ARMORRESISTMULTIPLIER = subscriber.subscribe(builder.comment("Changes the multiplier that controls how much defense to the infection armor gives").defineInRange("armorInfectResist", 2d, 0d, 100d));
         this.RESISTGIVENAP = subscriber.subscribe(builder.comment("Effects how much resistance general antiparasitic gives the player when used").defineInRange("playerResistanceGiven", 6d, 1d, 100d));
-        this.PLAYERINFECTIONTHRESHOLD = subscriber.subscribe(builder.comment("Changes where players can start infecting each other in infection percentage").define("playerContagionThreshold", 50));
         this.INFECTEDENTITYINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by fully converted entities.").define("infectedEntityInfection", 95));
         this.ZOMBIEINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by ZombieEntity and it's derivatives").define("zombieEntityInfection", 20));
         this.RAWFOODINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by eating vanilla raw food").define("rawFoodInfection", 10));
         builder.pop();
+
+        builder.comment("Modify Infection Side effects - when do side effects occur when enabled?").push(SCATEGORY_SYMPTOMS);
+        this.EFFECTMESSAGEONE = subscriber.subscribe(builder.comment("Changes when the first warning message for the infection will send").defineInRange("effectMessageOneTime", 10, 0, Integer.MAX_VALUE));
+        this.EFFECTMESSAGETWO = subscriber.subscribe(builder.comment("Changes when the second warning message for the infection will send").defineInRange("effectMessageTwoTime", 25, 0, Integer.MAX_VALUE));
+        this.EFFECTCHAT = subscriber.subscribe(builder.comment("Changes when the chat blocking side effect occurs").defineInRange("effectChatTime", 40, 0, Integer.MAX_VALUE));
+        this.PLAYERINFECTIONTHRESHOLD = subscriber.subscribe(builder.comment("Changes where players can start infecting each other in infection percentage").defineInRange("effectContagionTime", 50, 0, Integer.MAX_VALUE));
+        this.EFFECTSPEED = subscriber.subscribe(builder.comment("Changes when the speed/slowdown side effects occurs").defineInRange("effectSpeedTime", 60, 0, Integer.MAX_VALUE));
+        this.EFFECTSTRENGTH = subscriber.subscribe(builder.comment("Changes then the strength/weakness side effects occurs").defineInRange("effectStrengthTime", 85, 0, Integer.MAX_VALUE));
+        this.EFFECTBLIND = subscriber.subscribe(builder.comment("Changes then the blindness side effects occur").defineInRange("effectBlindnessTime", 95, 0, Integer.MAX_VALUE));
+        this.EFFECTDAMAGE = subscriber.subscribe(builder.comment("Changes when players will be attacked by the parasite").defineInRange("effectAttackTime", 100, 0, Integer.MAX_VALUE));
 
         builder.comment("Modify other properties of the mod, for the more wacky fun times.").push(SCATEGORY_OTHERS);
         this.EGGINFECTIONSTART = subscriber.subscribe(builder.comment("Changes how much infection is given when a player when injected with the Immortuos eggs").define("infectAmountEgg", 1));

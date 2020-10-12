@@ -73,22 +73,22 @@ public class InfectionEventManager {
         if(event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.START){
             PlayerEntity player = event.player;
             player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                if(h.getInfectionProgress() >= 60){
+                if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTSPEED.get()){
                     BlockPos CurrentPosition = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
                     float temperature = player.world.getBiomeManager().getBiome(CurrentPosition).getTemperature(CurrentPosition);
                     if(temperature > 0.9 && ImmortuosCalyx.config.HEATSLOW.get()){player.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 0, true, false));}
                     else if(temperature < 0.275 && ImmortuosCalyx.config.COLDFAST.get()){player.addPotionEffect(new EffectInstance(Effects.SPEED, 5, 0, true, false));}
                 }
-                if(h.getInfectionProgress() >= 85){
+                if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTSTRENGTH.get()){
                     BlockPos CurrentPosition = new BlockPos(player.getPosX(), player.getPosY(), player.getPosZ());
                     float temperature = player.world.getBiomeManager().getBiome(CurrentPosition).getTemperature(CurrentPosition);
                     if(temperature > 0.275 && ImmortuosCalyx.config.WARMWEAKNESS.get()){player.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 5, 0, true, false));}
                     else if (temperature <= 0.275 && ImmortuosCalyx.config.COLDSTRENGTH.get()) {player.addPotionEffect(new EffectInstance(Effects.STRENGTH, 5, 0, true, false));}
                 }
-                if(h.getInfectionProgress() >= 95 && ImmortuosCalyx.config.BLINDNESS.get()){
+                if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTBLIND.get() && ImmortuosCalyx.config.BLINDNESS.get()){
                     player.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 1, true, false));
                 }
-                if(h.getInfectionProgress() >= 100){
+                if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTDAMAGE.get()){
                     Random random = new Random();
                     int randomValue = random.nextInt(100);
                     if(randomValue < 1 && ImmortuosCalyx.config.INFECTIONDAMAGE.get() > 0){
@@ -104,7 +104,7 @@ public class InfectionEventManager {
     public static void InfectionChat(ServerChatEvent event){
         PlayerEntity player = event.getPlayer();
         player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-            if(h.getInfectionProgress() >= 40 && ImmortuosCalyx.config.ANTICHAT.get()) {event.setCanceled(true);};//if the player's infection is @ or above 40%, they can no longer speak in text chat.
+            if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && ImmortuosCalyx.config.ANTICHAT.get()) {event.setCanceled(true);};//if the player's infection is @ or above 40%, they can no longer speak in text chat.
             if(!player.getEntityWorld().isRemote() && ImmortuosCalyx.config.INFECTEDCHATNOISE.get())player.world.playSound(null, player.getPosition(), Register.AMBIENT.get(), SoundCategory.PLAYERS, 0.5f, 2f);
         });
     }
@@ -130,7 +130,7 @@ public class InfectionEventManager {
             double resist = (double) resistRateGrabber.get();
             int threshold = ImmortuosCalyx.config.PLAYERINFECTIONTHRESHOLD.get();
             double armorInfectResist = ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get();
-            if(convert > threshold){ // if the attacker's infection rate is at or above the threshold.
+            if(convert >= threshold){ // if the attacker's infection rate is at or above the threshold.
                 int conversionThreshold = (int) ((convert - (protection*armorInfectResist))/resist); // creates mimimum score needed to not get infected
                 Random rand = new Random();
                 if(conversionThreshold > rand.nextInt(100)){ // rolls for infection. If random value rolls below threshold, target is at risk of infection.
@@ -226,35 +226,44 @@ public class InfectionEventManager {
 
     private static void EffectController(PlayerEntity inflictedPlayer){
         inflictedPlayer.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-            int progressionLogic = h.getInfectionProgress();
-            switch(progressionLogic){
-                default:
-                    break;
-                case 10:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "Your throat feels sore"), inflictedPlayer.getUniqueID());
-                    break;
-                case 25:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "Your mind feels foggy"), inflictedPlayer.getUniqueID());
-                    break;
-                case 40:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You feel something moving around in your head, you try to yell, but nothing comes out"), inflictedPlayer.getUniqueID());
-                    break;
-                case 50:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "There is something on your skin and you can't get it off.."), inflictedPlayer.getUniqueID());
-                    break;
-                case 60:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You start feeling ill in warm environments, and better in cool ones.."), inflictedPlayer.getUniqueID());
-                    break;
-                case 85:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You begin to feel weak in all but the coldest environments.."), inflictedPlayer.getUniqueID());
-                    break;
-                case 95:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "Your vision gets darker and darker.."), inflictedPlayer.getUniqueID());
-                    break;
-                case 100:
-                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You feel an overwhelming pain in your head..."), inflictedPlayer.getUniqueID());
-                    break;
-            }
+            int progressionLogic = h.getInfectionProgress(); //this used to be a switch. I love switches. But switches require constants. These are not constant values anymore. Too bad.
+                if(progressionLogic == ImmortuosCalyx.config.EFFECTMESSAGEONE.get()){
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "Your throat feels sore"), inflictedPlayer.getUniqueID());}
+
+                else if(progressionLogic == ImmortuosCalyx.config.EFFECTMESSAGETWO.get()){
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "Your mind feels foggy"), inflictedPlayer.getUniqueID());}
+
+                else if(progressionLogic == ImmortuosCalyx.config.EFFECTCHAT.get()){
+                    if (ImmortuosCalyx.config.ANTICHAT.get())
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You feel something moving around in your head, you try to yell, but nothing comes out"), inflictedPlayer.getUniqueID());}
+
+                else if(progressionLogic == ImmortuosCalyx.config.PLAYERINFECTIONTHRESHOLD.get()){
+                    if (ImmortuosCalyx.config.PVPCONTAGION.get())
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "There is something on your skin and you can't get it off.."), inflictedPlayer.getUniqueID());}
+
+                else if(progressionLogic == ImmortuosCalyx.config.EFFECTSPEED.get()){
+                    if (ImmortuosCalyx.config.COLDFAST.get() && ImmortuosCalyx.config.HEATSLOW.get())
+                        inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You start feeling ill in warm environments, and better in cool ones.."), inflictedPlayer.getUniqueID());
+                    else if (ImmortuosCalyx.config.COLDFAST.get() && !ImmortuosCalyx.config.HEATSLOW.get())
+                        inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You begin to feel better in cool environments.."), inflictedPlayer.getUniqueID());
+                    else if (ImmortuosCalyx.config.HEATSLOW.get() && !ImmortuosCalyx.config.COLDFAST.get())
+                        inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You begin feeling ill in warm environments..."), inflictedPlayer.getUniqueID());}
+
+                else if(progressionLogic == ImmortuosCalyx.config.EFFECTSTRENGTH.get()){
+                    if (ImmortuosCalyx.config.COLDSTRENGTH.get() && ImmortuosCalyx.config.WARMWEAKNESS.get())
+                        inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You begin to feel weak in all but the coldest environments.."), inflictedPlayer.getUniqueID());
+                    else if (ImmortuosCalyx.config.COLDSTRENGTH.get() && !ImmortuosCalyx.config.WARMWEAKNESS.get())
+                        inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You begin to feel strong in cold environments.."), inflictedPlayer.getUniqueID());
+                    else if (ImmortuosCalyx.config.WARMWEAKNESS.get() && !ImmortuosCalyx.config.COLDSTRENGTH.get())
+                        inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You begin to feel weak in warm environments.."), inflictedPlayer.getUniqueID());}
+
+                else if(progressionLogic == ImmortuosCalyx.config.EFFECTBLIND.get()){
+                    if(ImmortuosCalyx.config.BLINDNESS.get())
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "Your vision gets darker and darker.."), inflictedPlayer.getUniqueID());}
+
+                else if(progressionLogic == ImmortuosCalyx.config.EFFECTDAMAGE.get()){
+                    if(ImmortuosCalyx.config.INFECTIONDAMAGE.get() > 0)
+                    inflictedPlayer.sendMessage(new StringTextComponent(TextFormatting.RED + "You feel an overwhelming pain in your head..."), inflictedPlayer.getUniqueID());}
         });
     }
 }
