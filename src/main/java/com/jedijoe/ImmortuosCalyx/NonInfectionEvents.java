@@ -104,7 +104,7 @@ public class NonInfectionEvents {
             });
             event.setCanceled(true);
             if(!event.getTarget().world.isRemote()){target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
-            if(target instanceof InfectedDiverEntity || target instanceof InfectedHumanEntity){((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.WITHER, 500, 25, true, false));}
+            if(target instanceof InfectedDiverEntity || target instanceof InfectedHumanEntity){((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.SPEED, 30*20, 2, true, false)); ((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.STRENGTH, 30*20, 1, true, false));}
         }
     }
 

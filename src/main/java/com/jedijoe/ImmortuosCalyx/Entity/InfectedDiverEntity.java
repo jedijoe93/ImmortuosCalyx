@@ -1,5 +1,6 @@
 package com.jedijoe.ImmortuosCalyx.Entity;
 
+import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import com.jedijoe.ImmortuosCalyx.Register;
 import net.minecraft.block.BlockState;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class InfectedDiverEntity extends DrownedEntity {
 
@@ -55,9 +57,16 @@ public class InfectedDiverEntity extends DrownedEntity {
 
 
     @Override
-    public boolean shouldAttack(@Nullable LivingEntity p_204714_1_) {
-        if(p_204714_1_ != null){
-        return true;}else return false;
+    public boolean shouldAttack(@Nullable LivingEntity entity) {
+        if(entity != null){
+            AtomicBoolean infectedThreshold = new AtomicBoolean(false);
+            entity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                if(h.getInfectionProgress() >= 75) infectedThreshold.set(true);
+            });
+            if(infectedThreshold.get()) return false;
+            return !this.world.isDaytime() || entity.isInWater();
+
+       }else return false;
     }
 
     @Override
@@ -85,8 +94,9 @@ public class InfectedDiverEntity extends DrownedEntity {
     @Override
     public void livingTick() {
         super.livingTick();
-        this.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-            if(h.getInfectionProgress() < 100) h.setInfectionProgress(100);
+        this.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+            if (h.getInfectionProgress() < 100) h.setInfectionProgress(100);
         });
     }
+
 }

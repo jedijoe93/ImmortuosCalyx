@@ -1,7 +1,9 @@
 package com.jedijoe.ImmortuosCalyx.Entity;
 
+import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import com.jedijoe.ImmortuosCalyx.Register;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierManager;
@@ -32,6 +34,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class InfectedHumanEntity extends MonsterEntity {
 
@@ -57,18 +60,28 @@ public class InfectedHumanEntity extends MonsterEntity {
         this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 0.5D));
         this.targetSelector.addGoal(1, new SwimGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.5D, false));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAttack));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
     }
 
+
+    public boolean shouldAttack(@Nullable LivingEntity entity) {
+        if(entity != null){
+            AtomicBoolean infectedThreshold = new AtomicBoolean(false);
+            entity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                if(h.getInfectionProgress() >= 75) infectedThreshold.set(true);
+            });
+            if(infectedThreshold.get()) return false;
+            else return true;
+
+        }else return false;
+    }
 
 
     @Override
     protected int getExperiencePoints(PlayerEntity player) {
         return 5 + this.world.rand.nextInt(5);
     }
-
 
     @Override
     protected SoundEvent getAmbientSound() { return Register.AMBIENT.get(); }

@@ -30,11 +30,6 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Integer> ZOMBIEINFECTIONVALUE;
     public ConfigHelper.ConfigValueListener<Integer> RAWFOODINFECTIONVALUE;
 
-    public ConfigHelper.ConfigValueListener<Integer> EGGINFECTIONSTART;
-    public ConfigHelper.ConfigValueListener<Integer> INFECTIONDAMAGE;
-    public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONRELIEF;
-    public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONAMOUNT;
-    public ConfigHelper.ConfigValueListener<Integer> INFECTIONTIMER;
 
     public ConfigHelper.ConfigValueListener<Integer> EFFECTMESSAGEONE;
     public ConfigHelper.ConfigValueListener<Integer> EFFECTMESSAGETWO;
@@ -44,6 +39,14 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Integer> EFFECTSTRENGTH;
     public ConfigHelper.ConfigValueListener<Integer> EFFECTBLIND;
     public ConfigHelper.ConfigValueListener<Integer> EFFECTDAMAGE;
+
+
+    public ConfigHelper.ConfigValueListener<Integer> EGGINFECTIONSTART;
+    public ConfigHelper.ConfigValueListener<Integer> INFECTIONDAMAGE;
+    public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONRELIEF;
+    public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONAMOUNT;
+    public ConfigHelper.ConfigValueListener<Integer> INFECTIONTIMER;
+
 
 
     public Configuration(ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber){
@@ -66,7 +69,7 @@ public class Configuration {
         this.RAWFOODINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by eating vanilla raw food").define("rawFoodInfection", 10));
         builder.pop();
 
-        builder.comment("Modify Infection Side effects - when do side effects occur when enabled?").push(SCATEGORY_SYMPTOMS);
+        builder.comment("Modify Infection Side effects - when do side effects occur when enabled?").push(SCATEGORY_EFFECTS);
         this.EFFECTMESSAGEONE = subscriber.subscribe(builder.comment("Changes when the first warning message for the infection will send").defineInRange("effectMessageOneTime", 10, 0, Integer.MAX_VALUE));
         this.EFFECTMESSAGETWO = subscriber.subscribe(builder.comment("Changes when the second warning message for the infection will send").defineInRange("effectMessageTwoTime", 25, 0, Integer.MAX_VALUE));
         this.EFFECTCHAT = subscriber.subscribe(builder.comment("Changes when the chat blocking side effect occurs").defineInRange("effectChatTime", 40, 0, Integer.MAX_VALUE));
@@ -75,6 +78,7 @@ public class Configuration {
         this.EFFECTSTRENGTH = subscriber.subscribe(builder.comment("Changes then the strength/weakness side effects occurs").defineInRange("effectStrengthTime", 85, 0, Integer.MAX_VALUE));
         this.EFFECTBLIND = subscriber.subscribe(builder.comment("Changes then the blindness side effects occur").defineInRange("effectBlindnessTime", 95, 0, Integer.MAX_VALUE));
         this.EFFECTDAMAGE = subscriber.subscribe(builder.comment("Changes when players will be attacked by the parasite").defineInRange("effectAttackTime", 100, 0, Integer.MAX_VALUE));
+        builder.pop();
 
         builder.comment("Modify other properties of the mod, for the more wacky fun times.").push(SCATEGORY_OTHERS);
         this.EGGINFECTIONSTART = subscriber.subscribe(builder.comment("Changes how much infection is given when a player when injected with the Immortuos eggs").define("infectAmountEgg", 1));
@@ -82,7 +86,7 @@ public class Configuration {
         this.PVPCONTAGIONRELIEF = subscriber.subscribe(builder.comment("Changes how much infecting other players relieves a player of the infection").define("infectionRelief", 5));
         this.PVPCONTAGIONAMOUNT = subscriber.subscribe(builder.comment("Changes how much you infect a player by infecting them via pvp").define("infectionPVPContagion", 1));
         this.INFECTIONTIMER = subscriber.subscribe(builder.comment("Changes how long it takes for the infection to go up 1% in ticks (assuming no lag, 20 per second)").define("infectionTicker", 450));
-        builder.pop();
+       builder.pop();
 
     }
 
