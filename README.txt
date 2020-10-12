@@ -1,53 +1,15 @@
--------------------------------------------
-Source installation information for modders
--------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
+We've been getting reports of players infected by a strange new disease. Days after infection we've seen strange, aggressive behaviors from them. After further inspection we found it is a parasite. Now named Immortuos Calyx, it poses a high threat to our way of life. We have developed a cure... but it's imperfect, and we can not risk distribution at this time. Stay safe, cook your food, and avoid infected individuals at all costs.
 
-Note also that the patches are built against "unrenamed" MCP source code (aka
-srgnames) - this means that you will not be able to read them directly against
-normal code.
+Immortuos Calyx is a parasite loosely based off of the Velonaceps Calyx parasite from Barotrauma.
 
-Source pack installation information:
+Immortuos Calyx slowly infects the player over time, ingraining itself in the host's organs, and providing all sorts of trouble (and in certain conditions, benefits!)
+ 
+Permissions:
+Modpacks: Sure
+Videos and media: Sure
+Stealing the mod and calling it your own: No
+Using bits of code I made in your own mod: When I make it open source (Soon) Sure. If you're using a full file or something though, it'd be nice if you gave me credit in the relevant files.
+Porting the mod to newer versions: If this doesn't update for about two major updates, I don't mind. Unless I changed this permission line.
 
-Standalone source installation
-==============================
 
-See the Forge Documentation online for more detailed instructions:
-http://mcforge.readthedocs.io/en/latest/gettingstarted/
-
-Step 1: Open your command-line and browse to the folder where you extracted the zip file.
-
-Step 2: You're left with a choice.
-If you prefer to use Eclipse:
-1. Run the following command: "gradlew genEclipseRuns" (./gradlew genEclipseRuns if you are on Mac/Linux)
-2. Open Eclipse, Import > Existing Gradle Project > Select Folder 
-   or run "gradlew eclipse" to generate the project.
-(Current Issue)
-4. Open Project > Run/Debug Settings > Edit runClient and runServer > Environment
-5. Edit MOD_CLASSES to show [modid]%%[Path]; 2 times rather then the generated 4.
-
-If you prefer to use IntelliJ:
-1. Open IDEA, and import project.
-2. Select your build.gradle file and have it import.
-3. Run the following command: "gradlew genIntellijRuns" (./gradlew genIntellijRuns if you are on Mac/Linux)
-4. Refresh the Gradle Project in IDEA if required.
-
-If at any point you are missing libraries in your IDE, or you've run into problems you can run "gradlew --refresh-dependencies" to refresh the local cache. "gradlew clean" to reset everything {this does not affect your code} and then start the processs again.
-
-Should it still not work, 
-Refer to #ForgeGradle on EsperNet for more information about the gradle environment.
-or the Forge Project Discord discord.gg/UvedJ9m
-
-Forge source installation
-=========================
-MinecraftForge ships with this code and installs it as part of the forge
-installation process, no further action is required on your part.
-
-LexManos' Install Video
-=======================
-https://www.youtube.com/watch?v=8VEdtQLuLO0&feature=youtu.be
-
-For more details update more often refer to the Forge Forums:
-http://www.minecraftforge.net/forum/index.php/topic,14048.0.html
+Uses ConfigHelper from commoble
