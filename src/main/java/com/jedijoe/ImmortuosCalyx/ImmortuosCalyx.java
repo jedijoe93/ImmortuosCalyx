@@ -5,6 +5,7 @@ import com.jedijoe.ImmortuosCalyx.Configs.ConfigHelper;
 import com.jedijoe.ImmortuosCalyx.Configs.Configuration;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
+import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
@@ -50,6 +51,7 @@ public class ImmortuosCalyx
 
     private void setup(final FMLCommonSetupEvent event)
     {
+        InfectionManagerCapability.register();
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(Register.INFECTEDHUMAN.get(), InfectedHumanEntity.customAttributes().create());
             GlobalEntityTypeAttributes.put(Register.INFECTEDDIVER.get(), InfectedDiverEntity.customAttributes().create());

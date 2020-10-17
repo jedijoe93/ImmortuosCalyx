@@ -10,9 +10,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 public class InfectionManager implements IInfectionManager, ICapabilityProvider, INBTSerializable<CompoundNBT> {
-    protected int infectionProgress;
-    protected int infectionTimer;
-    protected double resistance;
+    protected int infectionProgress = 0;
+    protected int infectionTimer = 0;
+    protected double resistance = 1;
     public final LazyOptional<IInfectionManager> holder = LazyOptional.of(()->this);
     @Override
     public int getInfectionProgress() { return this.infectionProgress; } //grabs the infection %
@@ -40,7 +40,8 @@ public class InfectionManager implements IInfectionManager, ICapabilityProvider,
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return holder.cast();
+        if(cap == InfectionManagerCapability.INSTANCE){ return InfectionManagerCapability.INSTANCE.orEmpty(cap, this.holder); }
+        else return LazyOptional.empty();
     }
 
     @Override
