@@ -42,7 +42,7 @@ public class InfectedDiverEntity extends DrownedEntity {
     public static AttributeModifierMap.MutableAttribute customAttributes() {
         return MobEntity.func_233666_p_()
                 .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2D)
                 .createMutableAttribute(Attributes.ZOMBIE_SPAWN_REINFORCEMENTS, 0D);
     }
