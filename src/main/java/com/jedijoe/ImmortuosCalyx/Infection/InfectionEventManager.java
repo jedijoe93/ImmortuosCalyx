@@ -104,8 +104,11 @@ public class InfectionEventManager {
     public static void InfectionChat(ServerChatEvent event){
         PlayerEntity player = event.getPlayer();
         player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-            if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && ImmortuosCalyx.config.ANTICHAT.get()) {event.setCanceled(true);};//if the player's infection is @ or above 40%, they can no longer speak in text chat.
-            if(!player.getEntityWorld().isRemote() && ImmortuosCalyx.config.INFECTEDCHATNOISE.get())player.world.playSound(null, player.getPosition(), Register.AMBIENT.get(), SoundCategory.PLAYERS, 0.5f, 2f);
+            String name = player.getName().getString();
+            String format = "<" + name + "> ";
+            if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && ImmortuosCalyx.config.ANTICHAT.get() && ImmortuosCalyx.config.FORMATTEDINFECTCHAT.get()) {event.setComponent(new StringTextComponent(format +TextFormatting.OBFUSCATED + event.getMessage()));}
+            if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && ImmortuosCalyx.config.ANTICHAT.get() && !ImmortuosCalyx.config.FORMATTEDINFECTCHAT.get()) {event.setCanceled(true);};//if the player's infection is @ or above 40%, they can no longer speak in text chat.
+            if((h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && !player.getEntityWorld().isRemote() && ImmortuosCalyx.config.INFECTEDCHATNOISE.get()))player.world.playSound(null, player.getPosition(), Register.AMBIENT.get(), SoundCategory.PLAYERS, 0.5f, 2f);
         });
     }
 

@@ -46,6 +46,7 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONRELIEF;
     public ConfigHelper.ConfigValueListener<Integer> PVPCONTAGIONAMOUNT;
     public ConfigHelper.ConfigValueListener<Integer> INFECTIONTIMER;
+    public ConfigHelper.ConfigValueListener<Boolean> FORMATTEDINFECTCHAT;
 
 
 
@@ -86,7 +87,8 @@ public class Configuration {
         this.PVPCONTAGIONRELIEF = subscriber.subscribe(builder.comment("Changes how much infecting other players relieves a player of the infection").define("infectionRelief", 5));
         this.PVPCONTAGIONAMOUNT = subscriber.subscribe(builder.comment("Changes how much you infect a player by infecting them via pvp").define("infectionPVPContagion", 1));
         this.INFECTIONTIMER = subscriber.subscribe(builder.comment("Changes how long it takes for the infection to go up 1% in ticks (assuming no lag, 20 per second)").define("infectionTicker", 450));
-       builder.pop();
+        this.FORMATTEDINFECTCHAT = subscriber.subscribe(builder.comment("Enables formatted chat for infected users. A middle ground for antichat where infected user's chat is obfuscated instead of outright removed. When false, chat is outright removed.").define("ObfuscateInfChat", false));
+        builder.pop();
 
     }
 
