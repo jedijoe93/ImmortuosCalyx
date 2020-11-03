@@ -15,10 +15,7 @@ import net.minecraft.network.IPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
@@ -30,6 +27,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.NetworkHooks;
+import org.spongepowered.asm.mixin.MixinEnvironment;
 
 import javax.annotation.Nonnull;
 
@@ -120,25 +118,33 @@ public class NonInfectionEvents {
     }
 
     @SubscribeEvent
-    public static void playerExtract(AttackEntityEvent event){
+    public static void playerExtract(PlayerInteractEvent.EntityInteract event) {
         Entity target = event.getTarget();
-        if(event.getTarget() instanceof SlimeEntity && event.getEntity() instanceof PlayerEntity){
-            PlayerEntity player = (PlayerEntity) event.getEntity();
-            if(player.getHeldItemMainhand().getItem().equals(Register.SYRINGE.get().getItem())){
-                ItemStack olditemstack = player.getHeldItemMainhand();
-                olditemstack.shrink(1);
-                ItemStack itemStack = new ItemStack(Register.GENERALANTIPARASITIC.get());
-                player.inventory.addItemStackToInventory(itemStack);
-                if(!event.getTarget().world.isRemote()){target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.EXTRACT.get(), SoundCategory.PLAYERS, 1f, 1f);}
-            }
-        }else if((event.getTarget() instanceof InfectedHumanEntity) || (event.getTarget() instanceof InfectedDiverEntity) && event.getEntity() instanceof PlayerEntity){
-            PlayerEntity player = (PlayerEntity) event.getEntity();
-            if(player.getHeldItemMainhand().getItem().equals(Register.SYRINGE.get().getItem())){
-                ItemStack olditemstack = player.getHeldItemMainhand();
-                olditemstack.shrink(1);
-                ItemStack itemStack = new ItemStack(Register.IMMORTUOSCALYXEGGS.get());
-                player.inventory.addItemStackToInventory(itemStack);
-                if(!target.getEntityWorld().isRemote()) {target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.EXTRACT.get(), SoundCategory.PLAYERS, 1f, 1f);}
+        if (event.getSide() == LogicalSide.SERVER) {
+            if (event.getHand() == Hand.MAIN_HAND) {
+                if (event.getTarget() instanceof SlimeEntity && event.getEntity() instanceof PlayerEntity) {
+                    PlayerEntity player = (PlayerEntity) event.getEntity();
+                    if (player.getHeldItemMainhand().getItem().equals(Register.SYRINGE.get().getItem())) {
+                        ItemStack olditemstack = player.getHeldItemMainhand();
+                        olditemstack.shrink(1);
+                        ItemStack itemStack = new ItemStack(Register.GENERALANTIPARASITIC.get());
+                        player.inventory.addItemStackToInventory(itemStack);
+                        if (!event.getEntity().world.isRemote()) {
+                            target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.EXTRACT.get(), SoundCategory.PLAYERS, 1f, 1f);
+                        }
+                    }
+                } else if ((event.getTarget() instanceof InfectedHumanEntity) || (event.getTarget() instanceof InfectedDiverEntity) && event.getEntity() instanceof PlayerEntity) {
+                    PlayerEntity player = (PlayerEntity) event.getEntity();
+                    if (player.getHeldItemMainhand().getItem().equals(Register.SYRINGE.get().getItem())) {
+                        ItemStack olditemstack = player.getHeldItemMainhand();
+                        olditemstack.shrink(1);
+                        ItemStack itemStack = new ItemStack(Register.IMMORTUOSCALYXEGGS.get());
+                        player.inventory.addItemStackToInventory(itemStack);
+                        if (!target.getEntityWorld().isRemote()) {
+                            target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.EXTRACT.get(), SoundCategory.PLAYERS, 1f, 1f);
+                        }
+                    }
+                }
             }
         }
     }
