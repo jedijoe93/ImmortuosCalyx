@@ -14,6 +14,7 @@ public class Configuration {
     public static final String SCATEGORY_CONTAGION = "contagionMechanics";
     public static final String SCATEGORY_EFFECTS = "effectPercentages";
     public static final String SCATEGORY_OTHERS = "others";
+    public static final String SCATEGORY_VILLAGERINF = "villagerInfections";
 
     public ConfigHelper.ConfigValueListener<Boolean> ANTICHAT;
     public ConfigHelper.ConfigValueListener<Boolean> INFECTEDCHATNOISE;
@@ -48,6 +49,7 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Integer> INFECTIONTIMER;
     public ConfigHelper.ConfigValueListener<Boolean> FORMATTEDINFECTCHAT;
 
+    public ConfigHelper.ConfigValueListener<Integer> VILLAGERINFECTIONTIMER;
 
 
     public Configuration(ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber){
@@ -82,13 +84,16 @@ public class Configuration {
         builder.pop();
 
         builder.comment("Modify other properties of the mod, for the more wacky fun times.").push(SCATEGORY_OTHERS);
-        this.EGGINFECTIONSTART = subscriber.subscribe(builder.comment("Changes how much infection is given when a player when injected with the Immortuos eggs").define("infectAmountEgg", 1));
+        this.EGGINFECTIONSTART = subscriber.subscribe(builder.comment("Changes how much infection is given to an entity when injected with the Immortuos eggs").define("infectAmountEgg", 1));
         this.INFECTIONDAMAGE = subscriber.subscribe(builder.comment("Changes how much damage the infection deals to players at 100%").define("infectionDamage", 1));
         this.PVPCONTAGIONRELIEF = subscriber.subscribe(builder.comment("Changes how much infecting other players relieves a player of the infection").define("infectionRelief", 5));
         this.PVPCONTAGIONAMOUNT = subscriber.subscribe(builder.comment("Changes how much you infect a player by infecting them via pvp").define("infectionPVPContagion", 1));
         this.INFECTIONTIMER = subscriber.subscribe(builder.comment("Changes how long it takes for the infection to go up 1% in ticks (assuming no lag, 20 per second)").define("infectionTicker", 450));
         this.FORMATTEDINFECTCHAT = subscriber.subscribe(builder.comment("Enables formatted chat for infected users. A middle ground for antichat where infected user's chat is obfuscated instead of outright removed. When false, chat is outright removed.").define("ObfuscateInfChat", false));
         builder.pop();
+
+        builder.comment("Modify the infections of Villagers").push(SCATEGORY_VILLAGERINF);
+        this.VILLAGERINFECTIONTIMER = subscriber.subscribe(builder.comment("Changes how long it takes for the infection to go up 1% in ticks (assuming no lag, 20 per second)").define("villagerInfectionTicker", 450));
 
     }
 
