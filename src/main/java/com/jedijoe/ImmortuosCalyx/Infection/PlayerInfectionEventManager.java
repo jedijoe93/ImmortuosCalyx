@@ -209,7 +209,7 @@ public class PlayerInfectionEventManager {
             }
         }
     }
-    static Item[] rawItem = new Item[]{Items.BEEF, Items.RABBIT, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.COD, Items.SALMON};
+    static Item[] rawItem = new Item[]{Items.BEEF, Items.RABBIT, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.COD, Items.SALMON, Items.ROTTEN_FLESH};
     @SubscribeEvent
     public static void rawFood(LivingEntityUseItemEvent.Finish event){
         if(event.getEntity() instanceof PlayerEntity){

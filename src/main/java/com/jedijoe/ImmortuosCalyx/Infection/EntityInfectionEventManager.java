@@ -49,11 +49,11 @@ public class EntityInfectionEventManager {
         int level = infectionlevel.get();
         if(level > 0){
             if(entity instanceof VillagerEntity){
-                if(level > 14 && level < 30){
-                    entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 1, false, false));
-                }
-                else if(level > 29){
+
+                if(level >= 25){
                     entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 2, false, false));
+                }  else if(level >= 5){
+                    entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 1, false, false));
                 }
             }
         }
@@ -64,7 +64,7 @@ public class EntityInfectionEventManager {
         if(!event.getTarget().getEntityWorld().isRemote() && event.getHand() == Hand.MAIN_HAND && event.getTarget() instanceof VillagerEntity){
             VillagerEntity villager = (VillagerEntity) event.getTarget();
             villager.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                if(h.getInfectionProgress() > 49){
+                if(h.getInfectionProgress() >= 37){
                     event.setCanceled(true);
                     villager.setShakeHeadTicks(40);
                     villager.getEntityWorld().playSound(null, villager.getPosX(), villager.getPosY(), villager.getPosZ(), SoundEvents.ENTITY_VILLAGER_NO, SoundCategory.NEUTRAL, 1f, 1f);
