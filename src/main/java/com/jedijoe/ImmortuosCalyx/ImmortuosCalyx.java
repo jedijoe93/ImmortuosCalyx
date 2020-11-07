@@ -55,6 +55,7 @@ public class ImmortuosCalyx
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(Register.INFECTEDHUMAN.get(), InfectedHumanEntity.customAttributes().create());
             GlobalEntityTypeAttributes.put(Register.INFECTEDDIVER.get(), InfectedDiverEntity.customAttributes().create());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDVILLAGER.get(), InfectedDiverEntity.customAttributes().create());
         });
     }
 

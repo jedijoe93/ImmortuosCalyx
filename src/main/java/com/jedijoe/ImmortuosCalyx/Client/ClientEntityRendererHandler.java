@@ -5,6 +5,7 @@ import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Register;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -15,5 +16,6 @@ public class ClientEntityRendererHandler {
     public static void onClientSetup(FMLClientSetupEvent event){
         RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDHUMAN.get(), RenderInfectedHumanEntity::new);
         RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDDIVER.get(), RenderInfectedDiverEntity::new);
+        RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDVILLAGER.get(), RenderInfectedVillagerEntity::new);
     }
 }
