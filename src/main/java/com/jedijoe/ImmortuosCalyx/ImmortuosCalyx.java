@@ -5,6 +5,7 @@ import com.jedijoe.ImmortuosCalyx.Configs.ConfigHelper;
 import com.jedijoe.ImmortuosCalyx.Configs.Configuration;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedIGEntity;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -55,6 +56,8 @@ public class ImmortuosCalyx
         DeferredWorkQueue.runLater(() -> {
             GlobalEntityTypeAttributes.put(Register.INFECTEDHUMAN.get(), InfectedHumanEntity.customAttributes().create());
             GlobalEntityTypeAttributes.put(Register.INFECTEDDIVER.get(), InfectedDiverEntity.customAttributes().create());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDVILLAGER.get(), InfectedDiverEntity.customAttributes().create());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDIG.get(), InfectedIGEntity.customAttributes().create());
         });
     }
 
