@@ -61,7 +61,7 @@ public class InfectedDiverEntity extends DrownedEntity {
         if(entity != null){
             AtomicBoolean infectedThreshold = new AtomicBoolean(false);
             entity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                if(h.getInfectionProgress() >= 75) infectedThreshold.set(true);
+                if(h.getInfectionProgress() >= 50) infectedThreshold.set(true);
             });
             if(infectedThreshold.get()) return false;
             return !this.world.isDaytime() || entity.isInWater();

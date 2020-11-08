@@ -11,6 +11,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.monster.ZombifiedPiglinEntity;
@@ -61,7 +62,8 @@ public class InfectedHumanEntity extends MonsterEntity {
         this.targetSelector.addGoal(1, new SwimGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.5D, false));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAttack));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, 10, true, false, this::shouldAttack));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, 10, true, false, this::shouldAttack));
     }
 
 
@@ -69,7 +71,7 @@ public class InfectedHumanEntity extends MonsterEntity {
         if(entity != null){
             AtomicBoolean infectedThreshold = new AtomicBoolean(false);
             entity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                if(h.getInfectionProgress() >= 75) infectedThreshold.set(true);
+                if(h.getInfectionProgress() >= 50) infectedThreshold.set(true);
             });
             if(infectedThreshold.get()) return false;
             else return true;
