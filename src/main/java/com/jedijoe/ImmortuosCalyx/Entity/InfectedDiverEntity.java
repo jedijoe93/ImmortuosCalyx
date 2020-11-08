@@ -42,14 +42,20 @@ public class InfectedDiverEntity extends DrownedEntity {
     public static AttributeModifierMap.MutableAttribute customAttributes() {
         return MobEntity.func_233666_p_()
                 .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23F)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2D)
                 .createMutableAttribute(Attributes.ZOMBIE_SPAWN_REINFORCEMENTS, 0D);
     }
 
     @Override
+    protected void applyEntityAI() {
+        super.applyEntityAI();
+    }
+
+    @Override
     protected void registerGoals() {
         super.registerGoals();
+        applyEntityAI();
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
 
