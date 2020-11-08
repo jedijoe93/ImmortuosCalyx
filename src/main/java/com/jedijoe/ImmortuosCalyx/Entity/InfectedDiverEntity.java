@@ -75,13 +75,13 @@ public class InfectedDiverEntity extends DrownedEntity {
     }
 
     @Override
-    protected SoundEvent getAmbientSound() { return Register.AMBIENT.get(); }
+    protected SoundEvent getAmbientSound() { return Register.HUMANAMBIENT.get(); }
 
     @Override
-    protected SoundEvent getDeathSound() {return Register.DEATH.get(); }
+    protected SoundEvent getDeathSound() {return Register.HUMANDEATH.get(); }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return Register.HURT.get(); }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return Register.HUMANHURT.get(); }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {

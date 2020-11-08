@@ -50,15 +50,17 @@ public class Register {
     public static final RegistryObject<EntityType<InfectedVillagerEntity>> INFECTEDVILLAGER = ENTITY_TYPES.register("infectedvillager", () -> EntityType.Builder.create(InfectedVillagerEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infectedvillager").toString()));
     public static final RegistryObject<EntityType<InfectedIGEntity>> INFECTEDIG = ENTITY_TYPES.register("infectedig", ()-> EntityType.Builder.create(InfectedIGEntity::new, EntityClassification.MONSTER).size(1.6f, 2.6f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infectedig").toString()));
 
-    public static final RegistryObject<SoundEvent> AMBIENT = SOUND_EVENT.register("infected_idle", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infected_idle")));
-
-    public static final RegistryObject<SoundEvent> HURT = SOUND_EVENT.register("infected_hurt", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infected_hurt")));
-
-    public static final RegistryObject<SoundEvent> DEATH = SOUND_EVENT.register("infected_death", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infected_hurt")));
-
+    public static final RegistryObject<SoundEvent> HUMANAMBIENT = SOUND_EVENT.register("infected_idle", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infected_idle")));
+    public static final RegistryObject<SoundEvent> HUMANHURT = SOUND_EVENT.register("infected_hurt", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infected_hurt")));
+    public static final RegistryObject<SoundEvent> HUMANDEATH = SOUND_EVENT.register("infected_death", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infected_hurt")));
     public static final RegistryObject<SoundEvent> INJECT = SOUND_EVENT.register("inject", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "inject")));
-
     public static final RegistryObject<SoundEvent> EXTRACT = SOUND_EVENT.register("extract", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "extract")));
+    public static final RegistryObject<SoundEvent> IGHURT = SOUND_EVENT.register("iginfected_hurt", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "iginfected_hurt")));
+    public static final RegistryObject<SoundEvent> IGDEATH = SOUND_EVENT.register("iginfected_death", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "iginfected_death")));
+    public static final RegistryObject<SoundEvent> VILIDLE = SOUND_EVENT.register("villagerinfected_idle", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "villagerinfected_idle")));
+    public static final RegistryObject<SoundEvent> VILHURT = SOUND_EVENT.register("villagerinfected_hurt", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "villagerinfected_hurt")));
+    public static final RegistryObject<SoundEvent> VILDEATH = SOUND_EVENT.register("villagerinfected_death", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "villagerinfected_death")));
+
 
 }
 

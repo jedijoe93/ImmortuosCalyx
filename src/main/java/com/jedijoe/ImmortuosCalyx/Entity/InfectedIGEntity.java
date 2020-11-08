@@ -32,7 +32,7 @@ public class InfectedIGEntity extends IronGolemEntity {
 
     public static AttributeModifierMap.MutableAttribute customAttributes() {
         return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 75D)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 125D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4D);
     }
@@ -47,6 +47,7 @@ public class InfectedIGEntity extends IronGolemEntity {
         this.targetSelector.addGoal(1, new SwimGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.8D, false));
         this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.8D, 32.0F));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, 10, true, false, this::shouldAttack));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, 10, true, false, this::shouldAttack));
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, this::shouldAttack)); }
@@ -75,17 +76,14 @@ public class InfectedIGEntity extends IronGolemEntity {
     }
 
     @Override
-    protected SoundEvent getAmbientSound() { return Register.AMBIENT.get(); }
+    protected SoundEvent getDeathSound() {return Register.IGDEATH.get(); }
 
     @Override
-    protected SoundEvent getDeathSound() {return Register.DEATH.get(); }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return Register.HURT.get(); }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return Register.IGHURT.get(); }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_ZOMBIE_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.ENTITY_IRON_GOLEM_STEP, 0.15F, 1.0F);
     }
 
     @Override

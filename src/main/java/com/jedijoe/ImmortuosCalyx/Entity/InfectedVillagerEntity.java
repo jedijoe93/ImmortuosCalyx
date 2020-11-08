@@ -73,13 +73,13 @@ public class InfectedVillagerEntity extends MonsterEntity {
     }
 
     @Override
-    protected SoundEvent getAmbientSound() { return Register.AMBIENT.get(); }
+    protected SoundEvent getAmbientSound() { return Register.VILIDLE.get(); }
 
     @Override
-    protected SoundEvent getDeathSound() {return Register.DEATH.get(); }
+    protected SoundEvent getDeathSound() {return Register.VILDEATH.get(); }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return Register.HURT.get(); }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) { return Register.VILHURT.get(); }
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {

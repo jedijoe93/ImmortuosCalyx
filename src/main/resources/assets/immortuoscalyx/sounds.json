@@ -3,5 +3,11 @@
 	"infected_hurt": { "sounds":["immortuoscalyx:infectedhurt1", "immortuoscalyx:infectedhurt2"]},
 	"infected_death": { "sounds":["immortuoscalyx:infecteddeath1", "immortuoscalyx:infecteddeath2"]},
 	"inject": {"sounds": ["immortuoscalyx:inject"]},
-	"extract": {"sounds": ["immortuoscalyx:extract"]}
+	"extract": {"sounds": ["immortuoscalyx:extract"]},
+	"iginfected_hurt":{"sounds":["immortuoscalyx:infectedighurt1", "immortuoscalyx:infectedighurt2"]},
+	"iginfected_death":{"sounds":["immortuoscalyx:infectedigdeath"]},
+	"villagerinfected_idle":{"sounds":["immortuoscalyx:infectedvillageridle1", "immortuoscalyx:infectedvillageridle2"]},
+	"villagerinfected_hurt":{"sounds":["immortuoscalyx:infectedvillagerhurt"]},
+	"villagerinfected_death":{"sounds":["immortuoscalyx:infectedvillagerdeath"]}
+	
 }

@@ -2,6 +2,8 @@ package com.jedijoe.ImmortuosCalyx;
 
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedIGEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedVillagerEntity;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionDamage;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.entity.Entity;
@@ -38,8 +40,10 @@ public class NonInfectionEvents {
     public static void selfUseCalyxide(PlayerInteractEvent.RightClickItem event){
         if(event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.CALYXANIDE.get())){
             PlayerEntity player = (PlayerEntity) event.getEntity();
-            if(player.isCrouching()) {CalyxideCure(player); event.getItemStack().shrink(1);}
+            if(player.isCrouching()) {CalyxideCure(player);
+            event.getItemStack().shrink(1);
             if(event.getSide() == LogicalSide.SERVER){event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
+            }
 
 
         }
@@ -49,8 +53,10 @@ public class NonInfectionEvents {
     public static void selfUseAntiParasite(PlayerInteractEvent.RightClickItem event){
         if(event.getEntity() instanceof PlayerEntity && event.getItemStack().getItem().equals(Register.GENERALANTIPARASITIC.get())){
             PlayerEntity player = (PlayerEntity) event.getEntity();
-            if(player.isCrouching()) {AntiParasiticCure(player); event.getItemStack().shrink(1);}
+            if(player.isCrouching()) {AntiParasiticCure(player);
+            event.getItemStack().shrink(1);
             if(event.getSide() == LogicalSide.SERVER){event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
+            }
         }
     }
 
@@ -62,8 +68,9 @@ public class NonInfectionEvents {
                 player.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
                     if(h.getInfectionProgress() == 0){h.addInfectionProgress(ImmortuosCalyx.config.EGGINFECTIONSTART.get());}
                 });
-                event.getItemStack().shrink(1);}
-            if(event.getSide() == LogicalSide.SERVER){event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
+                event.getItemStack().shrink(1);
+                if(event.getSide() == LogicalSide.SERVER){event.getWorld().playSound(null, player.getPosX(), player.getPosY(), player.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
+            }
 
         }
     }
@@ -103,7 +110,7 @@ public class NonInfectionEvents {
             });
             event.setCanceled(true);
             if(!event.getTarget().world.isRemote()){target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.INJECT.get(), SoundCategory.PLAYERS, 1f, 1f);}
-            if(target instanceof InfectedDiverEntity || target instanceof InfectedHumanEntity){((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.SPEED, 30*20, 2, true, false)); ((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.STRENGTH, 30*20, 1, true, false));}
+            if(target instanceof InfectedDiverEntity || target instanceof InfectedHumanEntity || target instanceof InfectedVillagerEntity){((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.SPEED, 30*20, 2, true, false)); ((MonsterEntity) target).addPotionEffect(new EffectInstance(Effects.STRENGTH, 30*20, 1, true, false));}
         }
     }
 

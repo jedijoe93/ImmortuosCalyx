@@ -108,7 +108,7 @@ public class PlayerInfectionEventManager {
             String format = "<" + name + "> ";
             if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && ImmortuosCalyx.config.ANTICHAT.get() && ImmortuosCalyx.config.FORMATTEDINFECTCHAT.get()) {event.setComponent(new StringTextComponent(format +TextFormatting.OBFUSCATED + event.getMessage()));}
             if(h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && ImmortuosCalyx.config.ANTICHAT.get() && !ImmortuosCalyx.config.FORMATTEDINFECTCHAT.get()) {event.setCanceled(true);};//if the player's infection is @ or above 40%, they can no longer speak in text chat.
-            if((h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && !player.getEntityWorld().isRemote() && ImmortuosCalyx.config.INFECTEDCHATNOISE.get()))player.world.playSound(null, player.getPosition(), Register.AMBIENT.get(), SoundCategory.PLAYERS, 0.5f, 2f);
+            if((h.getInfectionProgress() >= ImmortuosCalyx.config.EFFECTCHAT.get() && !player.getEntityWorld().isRemote() && ImmortuosCalyx.config.INFECTEDCHATNOISE.get()))player.world.playSound(null, player.getPosition(), Register.HUMANAMBIENT.get(), SoundCategory.PLAYERS, 0.5f, 2f);
         });
     }
 
@@ -145,7 +145,7 @@ public class PlayerInfectionEventManager {
             }
             if(infectedGrabber.get()){aggro.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{ //if surprise bool is activated, it means the aggressor player successfully infected someone. Removing part of the parasite and having it get on someone else.
                 h.addInfectionProgress(-ImmortuosCalyx.config.PVPCONTAGIONRELIEF.get()); });//because of that, symptoms are reduced.
-                if(!aggro.getEntityWorld().isRemote)aggro.world.playSound(null, aggro.getPosition(), Register.HURT.get(), SoundCategory.PLAYERS, 1f, 1.2f);}
+                if(!aggro.getEntityWorld().isRemote)aggro.world.playSound(null, aggro.getPosition(), Register.HUMANHURT.get(), SoundCategory.PLAYERS, 1f, 1.2f);}
         }
     }
 
