@@ -4,6 +4,7 @@ import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Register;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.EffectType;
 import net.minecraft.potion.Effects;
@@ -24,19 +25,20 @@ public class EntityInfectionEventManager {
     @SubscribeEvent
     public static void InfectionTicker(LivingEvent.LivingUpdateEvent event){
         LivingEntity entity = event.getEntityLiving();
+        if(!(entity instanceof PlayerEntity)){
         entity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
             if(h.getInfectionProgress() >= 1){
-                h.addInfectionTimer(1);
-                int timer = -1;
-                if (entity instanceof VillagerEntity){timer = ImmortuosCalyx.config.VILLAGERINFECTIONTIMER.get();}
-
-                if(h.getInfectionTimer() >= timer){
-                    h.addInfectionProgress(1);
-                    h.addInfectionTimer(-timer);
+                 h.addInfectionTimer(1);
+                 int timer = -1;
+                 if (entity instanceof VillagerEntity){timer = ImmortuosCalyx.config.VILLAGERINFECTIONTIMER.get();}
+                 else {timer = ImmortuosCalyx.config.INFECTIONTIMER.get();}
+                    if(h.getInfectionTimer() >= timer){
+                       h.addInfectionProgress(1);
+                        h.addInfectionTimer(-timer);
+                    }
                 }
-                if (timer == -1) {h.setInfectionProgress(0);}
-            }
-        });
+            });
+        }
     }
 
     @SubscribeEvent

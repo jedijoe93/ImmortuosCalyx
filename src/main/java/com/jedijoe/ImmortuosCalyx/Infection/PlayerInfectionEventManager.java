@@ -3,13 +3,17 @@ package com.jedijoe.ImmortuosCalyx.Infection;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedIGEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedVillagerEntity;
 import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Register;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -36,6 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.system.CallbackI;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -149,50 +154,92 @@ public class PlayerInfectionEventManager {
         }
     }
 
-    @SubscribeEvent public static void InfectFromMobs(net.minecraftforge.event.entity.living.LivingAttackEvent event){
-        if((event.getSource().getTrueSource() instanceof InfectedHumanEntity || event.getSource().getTrueSource() instanceof InfectedDiverEntity) && event.getEntityLiving() instanceof PlayerEntity){
-            int convert = ImmortuosCalyx.config.INFECTEDENTITYINFECTIONVALUE.get();
-            int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
-            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
-            event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                Double resist = Double.valueOf(h.getResistance());
-                resistRateGrabber.addAndGet(resist);
+    @SubscribeEvent public static void InfectFromMobAttack(net.minecraftforge.event.entity.living.LivingAttackEvent event){
+        if (event.getSource().getTrueSource() instanceof LivingEntity) {
+            LivingEntity aggro = (LivingEntity) event.getSource().getTrueSource();
+            LivingEntity target = event.getEntityLiving();
+            int convert = 0;
+            int protection = (int) (target.getTotalArmorValue() * ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get());
+            AtomicDouble InfectionResGrabber = new AtomicDouble(1);
+            AtomicBoolean InfectedGrabber = new AtomicBoolean(false);
+            target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+                InfectionResGrabber.set(h.getResistance());
+                if (h.getInfectionProgress() > 0) {
+                    InfectedGrabber.getAndSet(true);
+                }
             });
-            double resist = resistRateGrabber.get();
-            AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
-            int conversionThreshold = (int) ((convert - (protection*ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get()))/resist); // creates mimimum score needed to not get infected
-            Random rand = new Random();
-            if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
-                event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
-                    if (h.getInfectionProgress() == 0) {
+            double resist = InfectionResGrabber.get();
+            if (!InfectedGrabber.get()) { // if target is already infected, it isn't worth running all of this.
+                if (aggro instanceof PlayerEntity) {
+                } else if (aggro instanceof InfectedHumanEntity || aggro instanceof InfectedDiverEntity) {
+                    convert = 95;
+                } else if (aggro instanceof InfectedIGEntity) {
+                    convert = 75;
+                } else if (aggro instanceof InfectedVillagerEntity) {
+                    if (target instanceof IronGolemEntity || target instanceof AbstractVillagerEntity) {
+                        convert = 100; //villagers have a higher chance of infecting iron golems and other villagers.
+                    } else convert = 55;
+                } else {
+                    AtomicInteger inf = new AtomicInteger(0);
+                    aggro.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+                        inf.set(h.getInfectionProgress());
+                    });
+                    convert = inf.get();
+                }
+                int InfectThreshold = (int) ((convert - protection)/resist);
+                Random rand = new Random();
+                if(InfectThreshold > rand.nextInt(100)){
+                    target.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
                         h.addInfectionProgress(1);
-                        infectedGrabber.set(true);
-                    } // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
-                });
+                    });
+                }
             }
-        }else if(event.getSource().getTrueSource() instanceof ZombieEntity && event.getEntityLiving() instanceof PlayerEntity){
-            int convert = ImmortuosCalyx.config.ZOMBIEINFECTIONVALUE.get();
-            int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
-            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
-            event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                Double resist = Double.valueOf(h.getResistance());
-                resistRateGrabber.addAndGet(resist);
-            });
-            double resist = resistRateGrabber.get();
-            AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
-            int conversionThreshold = (int) ((convert - (protection*ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get()))/resist) ; // creates mimimum score needed to not get infected
-            Random rand = new Random();
-            if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
-                event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
-                    if (h.getInfectionProgress() == 0) {
-                        h.addInfectionProgress(1);
-                        infectedGrabber.set(true);
-                    } // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
-                });
-            }
-
         }
     }
+//        @SubscribeEvent public static void InfectFromMobs(net.minecraftforge.event.entity.living.LivingAttackEvent event){
+//        if((event.getSource().getTrueSource() instanceof InfectedHumanEntity || event.getSource().getTrueSource() instanceof InfectedDiverEntity) && event.getEntityLiving() instanceof PlayerEntity){
+//            int convert = ImmortuosCalyx.config.INFECTEDENTITYINFECTIONVALUE.get();
+//            int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
+//            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
+//            event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+//                Double resist = Double.valueOf(h.getResistance());
+//                resistRateGrabber.addAndGet(resist);
+//            });
+//            double resist = resistRateGrabber.get();
+//            AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
+//            int conversionThreshold = (int) ((convert - (protection*ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get()))/resist); // creates mimimum score needed to not get infected
+//            Random rand = new Random();
+//            if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
+//                event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+//                    if (h.getInfectionProgress() == 0) {
+//                        h.addInfectionProgress(1);
+//                        infectedGrabber.set(true);
+//                    } // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
+//                });
+//            }
+//        }else if(event.getSource().getTrueSource() instanceof ZombieEntity && event.getEntityLiving() instanceof PlayerEntity){
+//            int convert = ImmortuosCalyx.config.ZOMBIEINFECTIONVALUE.get();
+//            int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
+//            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
+//            event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+//                Double resist = Double.valueOf(h.getResistance());
+//                resistRateGrabber.addAndGet(resist);
+//            });
+//            double resist = resistRateGrabber.get();
+//            AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
+//            int conversionThreshold = (int) ((convert - (protection*ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get()))/resist) ; // creates mimimum score needed to not get infected
+//            Random rand = new Random();
+//            if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
+//                event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+//                    if (h.getInfectionProgress() == 0) {
+//                        h.addInfectionProgress(1);
+//                        infectedGrabber.set(true);
+//                    } // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
+//                });
+//            }
+//
+//        }
+//    }
 
     @SubscribeEvent
     public static void deathReplacement(LivingDeathEvent event){
