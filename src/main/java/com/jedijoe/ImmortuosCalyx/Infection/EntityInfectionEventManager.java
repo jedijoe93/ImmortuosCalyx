@@ -44,6 +44,7 @@ public class EntityInfectionEventManager {
                  h.addInfectionTimer(1);
                  int timer = -1;
                  if (entity instanceof VillagerEntity){timer = ImmortuosCalyx.config.VILLAGERINFECTIONTIMER.get();}
+                 else if(entity instanceof IronGolemEntity){timer = ImmortuosCalyx.config.IRONGOLEMTIMER.get();}
                  else {timer = ImmortuosCalyx.config.INFECTIONTIMER.get();}
                     if(h.getInfectionTimer() >= timer){
                        h.addInfectionProgress(1);
@@ -70,12 +71,12 @@ public class EntityInfectionEventManager {
 
 
     public static void VillagerLogic(VillagerEntity entity, int level){
-        if(level >= 25){ // greater than or equal to 25
+        if(level >= ImmortuosCalyx.config.VILLAGERSLOWTWO.get()){ // greater than or equal to 25
             entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 2, false, false));
-        }  else if(level >= 5){ //5-24%
+        }  else if(level >= ImmortuosCalyx.config.VILLAGERSLOWONE.get()){ //5-24%
             entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 1, false, false));
         }
-        if(level >= 55){
+        if(level >= ImmortuosCalyx.config.VILLAGERLETHAL.get()){
             Random rand = new Random();
             int random = rand.nextInt(100);
             if(random < 1 && ImmortuosCalyx.config.INFECTIONDAMAGE.get() > 0){
@@ -85,9 +86,9 @@ public class EntityInfectionEventManager {
     }
 
     public static void IGLogic(IronGolemEntity entity, int level){
-        if(level >= 30){ entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 1, false, false)); }
-        if(level >= 65){ entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 5, 1, false, false)); }
-        if(level >= 110){
+        if(level >= ImmortuosCalyx.config.IRONGOLEMSLOW.get()){ entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 1, false, false)); }
+        if(level >= ImmortuosCalyx.config.IRONGOLEMWEAK.get()){ entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 5, 1, false, false)); }
+        if(level >= ImmortuosCalyx.config.IRONGOLEMLETHAL.get()){
             Random rand = new Random();
             int random = rand.nextInt(100);
             if(random < 1 && ImmortuosCalyx.config.INFECTIONDAMAGE.get() > 0){
@@ -103,7 +104,7 @@ public class EntityInfectionEventManager {
             if(event.getTarget() instanceof VillagerEntity){
             VillagerEntity villager = (VillagerEntity) event.getTarget();
             villager.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                if(h.getInfectionProgress() >= 37){
+                if(h.getInfectionProgress() >= ImmortuosCalyx.config.VILLAGERNOTRADE.get()){
                     event.setCanceled(true);
                     villager.setShakeHeadTicks(40);
                     villager.getEntityWorld().playSound(null, villager.getPosX(), villager.getPosY(), villager.getPosZ(), Register.VILIDLE.get(), SoundCategory.NEUTRAL, 1f, 1f);

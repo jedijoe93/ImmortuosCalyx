@@ -50,6 +50,14 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Boolean> FORMATTEDINFECTCHAT;
 
     public ConfigHelper.ConfigValueListener<Integer> VILLAGERINFECTIONTIMER;
+    public ConfigHelper.ConfigValueListener<Integer> VILLAGERSLOWONE;
+    public ConfigHelper.ConfigValueListener<Integer> VILLAGERSLOWTWO;
+    public ConfigHelper.ConfigValueListener<Integer> VILLAGERNOTRADE;
+    public ConfigHelper.ConfigValueListener<Integer> VILLAGERLETHAL;
+    public ConfigHelper.ConfigValueListener<Integer> IRONGOLEMTIMER;
+    public ConfigHelper.ConfigValueListener<Integer> IRONGOLEMSLOW;
+    public ConfigHelper.ConfigValueListener<Integer> IRONGOLEMWEAK;
+    public ConfigHelper.ConfigValueListener<Integer> IRONGOLEMLETHAL;
 
 
     public Configuration(ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber){
@@ -94,6 +102,16 @@ public class Configuration {
 
         builder.comment("Modify the infections of Villagers").push(SCATEGORY_VILLAGERINF);
         this.VILLAGERINFECTIONTIMER = subscriber.subscribe(builder.comment("Changes how long it takes for the infection to go up 1% in ticks (assuming no lag, 20 per second)").define("villagerInfectionTicker", 450));
+        this.VILLAGERSLOWONE = subscriber.subscribe(builder.comment("How much infection a villager needs for slowness 1").define("villagerSlowOne", 5));
+        this.VILLAGERSLOWTWO = subscriber.subscribe(builder.comment("How much infection a villager needs for slowness 2").define("villagerSlowTwo", 25));
+        this.VILLAGERNOTRADE = subscriber.subscribe(builder.comment("How much infection a villager needs to deny trading").define("villagerDenyTrade", 37));
+        this.VILLAGERLETHAL = subscriber.subscribe(builder.comment("How much infection a villager needs to be lethal to the villager").define("villagerDeath", 60));
+        this.IRONGOLEMTIMER = subscriber.subscribe(builder.comment("How many ticks it takes an iron golem to go up 1% infection").define("igInfectionTicker", 450));
+        this.IRONGOLEMSLOW = subscriber.subscribe(builder.comment("How much infection an iron golem needs to be slowed down").define("igSlow", 30));
+        this.IRONGOLEMWEAK = subscriber.subscribe(builder.comment("How much infection an iron golem needs to be weakened").define("igWeak", 65));
+        this.IRONGOLEMLETHAL = subscriber.subscribe(builder.comment("How much infection an iron golem needs to have the infection be lethal").define("igDeath", 110));
+
+
 
     }
 

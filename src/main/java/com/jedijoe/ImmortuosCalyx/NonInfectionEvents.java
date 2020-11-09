@@ -141,7 +141,7 @@ public class NonInfectionEvents {
                             target.getEntityWorld().playSound(null, target.getPosX(), target.getPosY(), target.getPosZ(), Register.EXTRACT.get(), SoundCategory.PLAYERS, 1f, 1f);
                         }
                     }
-                } else if ((event.getTarget() instanceof InfectedHumanEntity) || (event.getTarget() instanceof InfectedDiverEntity) && event.getEntity() instanceof PlayerEntity) {
+                } else if ((event.getTarget() instanceof InfectedHumanEntity) || (event.getTarget() instanceof InfectedDiverEntity) || (event.getTarget() instanceof InfectedVillagerEntity) || (event.getTarget() instanceof InfectedIGEntity) && event.getEntity() instanceof PlayerEntity) {
                     PlayerEntity player = (PlayerEntity) event.getEntity();
                     if (player.getHeldItemMainhand().getItem().equals(Register.SYRINGE.get().getItem())) {
                         ItemStack olditemstack = player.getHeldItemMainhand();
@@ -188,7 +188,7 @@ public class NonInfectionEvents {
                         a.sendMessage(new StringTextComponent("Infection Level: " + h.getInfectionProgress() + "%"), a.getUniqueID());
                         a.sendMessage(new StringTextComponent("Resistance Multiplier: " + h.getResistance()), a.getUniqueID());
                     });
-                } else if (event.getTarget() instanceof InfectedHumanEntity || event.getTarget() instanceof InfectedDiverEntity) {
+                } else if (event.getTarget() instanceof InfectedHumanEntity || event.getTarget() instanceof InfectedDiverEntity || event.getTarget() instanceof InfectedIGEntity || event.getTarget() instanceof InfectedVillagerEntity) {
                     event.getEntity().sendMessage(new StringTextComponent("===(Target completely infected)==="), event.getEntity().getUniqueID());
                 } else if (event.getTarget() instanceof  LivingEntity){
                     LivingEntity entity = (LivingEntity) event.getTarget();
