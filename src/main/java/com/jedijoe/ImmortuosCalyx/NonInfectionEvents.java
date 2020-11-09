@@ -190,12 +190,12 @@ public class NonInfectionEvents {
                     });
                 } else if (event.getTarget() instanceof InfectedHumanEntity || event.getTarget() instanceof InfectedDiverEntity) {
                     event.getEntity().sendMessage(new StringTextComponent("===(Target completely infected)==="), event.getEntity().getUniqueID());
-                } else if (event.getTarget() instanceof VillagerEntity){
-                    VillagerEntity villager = (VillagerEntity) event.getTarget();
+                } else if (event.getTarget() instanceof  LivingEntity){
+                    LivingEntity entity = (LivingEntity) event.getTarget();
                     PlayerEntity player = (PlayerEntity) event.getEntity();
-                    villager.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                        player.sendMessage(new StringTextComponent("===(Villager's stats)==="), player.getUniqueID());
-                        player.sendMessage(new StringTextComponent("Health: " + villager.getHealth()), player.getUniqueID());
+                    entity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                        player.sendMessage(new StringTextComponent("===(" + entity.getName().getString() + "'s stats)==="), player.getUniqueID());
+                        player.sendMessage(new StringTextComponent("Health: " + entity.getHealth()), player.getUniqueID());
                         player.sendMessage(new StringTextComponent("Infection Rate: " + h.getInfectionProgress() + "%"), player.getUniqueID());
                     });
                 } else {
