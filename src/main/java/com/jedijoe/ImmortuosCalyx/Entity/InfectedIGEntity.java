@@ -66,6 +66,11 @@ public class InfectedIGEntity extends IronGolemEntity {
     }
 
 
+    @Override
+    public boolean canDespawn(double distanceToClosestPlayer) {
+        return false;
+    }
+
     protected boolean isDespawnPeaceful() {
         return true;
     }
