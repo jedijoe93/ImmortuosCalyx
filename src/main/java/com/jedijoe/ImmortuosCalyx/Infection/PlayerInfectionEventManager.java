@@ -196,66 +196,7 @@ public class PlayerInfectionEventManager {
             }
         }
     }
-//        @SubscribeEvent public static void InfectFromMobs(net.minecraftforge.event.entity.living.LivingAttackEvent event){
-//        if((event.getSource().getTrueSource() instanceof InfectedHumanEntity || event.getSource().getTrueSource() instanceof InfectedDiverEntity) && event.getEntityLiving() instanceof PlayerEntity){
-//            int convert = ImmortuosCalyx.config.INFECTEDENTITYINFECTIONVALUE.get();
-//            int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
-//            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
-//            event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-//                Double resist = Double.valueOf(h.getResistance());
-//                resistRateGrabber.addAndGet(resist);
-//            });
-//            double resist = resistRateGrabber.get();
-//            AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
-//            int conversionThreshold = (int) ((convert - (protection*ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get()))/resist); // creates mimimum score needed to not get infected
-//            Random rand = new Random();
-//            if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
-//                event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
-//                    if (h.getInfectionProgress() == 0) {
-//                        h.addInfectionProgress(1);
-//                        infectedGrabber.set(true);
-//                    } // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
-//                });
-//            }
-//        }else if(event.getSource().getTrueSource() instanceof ZombieEntity && event.getEntityLiving() instanceof PlayerEntity){
-//            int convert = ImmortuosCalyx.config.ZOMBIEINFECTIONVALUE.get();
-//            int protection = ((PlayerEntity) event.getEntityLiving()).getTotalArmorValue();
-//            AtomicDouble resistRateGrabber = new AtomicDouble(); //grab resistance from
-//            event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-//                Double resist = Double.valueOf(h.getResistance());
-//                resistRateGrabber.addAndGet(resist);
-//            });
-//            double resist = resistRateGrabber.get();
-//            AtomicBoolean infectedGrabber = new AtomicBoolean(false); //A surprise bool that will help us later
-//            int conversionThreshold = (int) ((convert - (protection*ImmortuosCalyx.config.ARMORRESISTMULTIPLIER.get()))/resist) ; // creates mimimum score needed to not get infected
-//            Random rand = new Random();
-//            if(conversionThreshold > rand.nextInt(100)) { // rolls for infection. If random value rolls below threshold, target is at risk of infection.
-//                event.getEntityLiving().getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
-//                    if (h.getInfectionProgress() == 0) {
-//                        h.addInfectionProgress(1);
-//                        infectedGrabber.set(true);
-//                    } // if target is not already infected, and the risk for infection exists, they are freshly infected. Surprise bool gets activated
-//                });
-//            }
-//
-//        }
-//    }
 
-    @SubscribeEvent
-    public static void deathReplacement(LivingDeathEvent event){
-        if (event.getEntityLiving() instanceof PlayerEntity){
-            PlayerEntity deadPlayer = (PlayerEntity) event.getEntityLiving();
-            if(event.getSource().damageType == "infection"){
-                World world = deadPlayer.getEntityWorld();
-                if(!world.isRemote()){
-                    ServerWorld serverWorld = (ServerWorld) world;
-                    InfectedHumanEntity infectedHumanEntity = new InfectedHumanEntity(Register.INFECTEDHUMAN.get(), world);
-                    infectedHumanEntity.setPosition(deadPlayer.getPosX(), deadPlayer.getPosY(), deadPlayer.getPosZ());
-                    Register.INFECTEDHUMAN.get().spawn(serverWorld, new ItemStack(Items.AIR), null, deadPlayer.getPosition(), SpawnReason.TRIGGERED, true, false);
-                }
-            }
-        }
-    }
     static Item[] rawItem = new Item[]{Items.BEEF, Items.RABBIT, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.COD, Items.SALMON, Items.ROTTEN_FLESH};
     @SubscribeEvent
     public static void rawFood(LivingEntityUseItemEvent.Finish event){
