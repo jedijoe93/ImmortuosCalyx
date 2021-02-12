@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class InfectedIGEntity extends IronGolemEntity {
+public class InfectedIGEntity extends IronGolemEntity implements InfectedEntity {
 
 
     public InfectedIGEntity(EntityType<InfectedIGEntity> type, World worldIn) {

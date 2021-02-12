@@ -37,7 +37,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class InfectedHumanEntity extends MonsterEntity {
+public class InfectedHumanEntity extends MonsterEntity implements InfectedEntity {
 
 
     public InfectedHumanEntity(EntityType<InfectedHumanEntity> type, World worldIn) {

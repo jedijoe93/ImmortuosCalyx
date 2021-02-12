@@ -30,6 +30,9 @@ public class Configuration {
     public ConfigHelper.ConfigValueListener<Integer> INFECTEDENTITYINFECTIONVALUE;
     public ConfigHelper.ConfigValueListener<Integer> ZOMBIEINFECTIONVALUE;
     public ConfigHelper.ConfigValueListener<Integer> RAWFOODINFECTIONVALUE;
+    public ConfigHelper.ConfigValueListener<Integer> INFECTEDAERIALRATE;
+    public ConfigHelper.ConfigValueListener<Integer> ZOMBIEAERIALRATE;
+    public ConfigHelper.ConfigValueListener<Integer> COMMONAERIALRATE;
 
 
     public ConfigHelper.ConfigValueListener<Integer> EFFECTMESSAGEONE;
@@ -78,6 +81,9 @@ public class Configuration {
         this.INFECTEDENTITYINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by fully converted entities.").define("infectedEntityInfection", 95));
         this.ZOMBIEINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by ZombieEntity and it's derivatives").define("zombieEntityInfection", 20));
         this.RAWFOODINFECTIONVALUE = subscriber.subscribe(builder.comment("Changes the base infection chance provided by eating vanilla raw food").define("rawFoodInfection", 10));
+        this.INFECTEDAERIALRATE = subscriber.subscribe(builder.comment("Higher numbers reduces aerosol infection attempts from custom infected entities").define("infectedAerosol", 5000));
+        this.ZOMBIEAERIALRATE = subscriber.subscribe(builder.comment("Higher numbers reduces aerosol infection attempts from zombies, and zombie-like mobs").define("zombieAerosol", 7500));
+        this.COMMONAERIALRATE = subscriber.subscribe(builder.comment("Higher numbers reduces aerosol infection attempts from any entity with partial infections.").define("commonAerosol", 10000));
         builder.pop();
 
         builder.comment("Modify Infection Side effects - when do side effects occur when enabled?").push(SCATEGORY_EFFECTS);

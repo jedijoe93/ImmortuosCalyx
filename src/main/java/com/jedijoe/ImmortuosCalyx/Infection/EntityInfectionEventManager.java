@@ -1,14 +1,14 @@
 package com.jedijoe.ImmortuosCalyx.Infection;
 
-import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
-import com.jedijoe.ImmortuosCalyx.Entity.InfectedIGEntity;
-import com.jedijoe.ImmortuosCalyx.Entity.InfectedVillagerEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.*;
 import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Register;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,6 +20,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
@@ -30,6 +32,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.system.CallbackI;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -127,4 +130,93 @@ public class EntityInfectionEventManager {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void InfectionByAir(LivingEvent.LivingUpdateEvent event){
+        LivingEntity Lentity = event.getEntityLiving();
+        Random rand = new Random();
+
+        if (Lentity instanceof InfectedEntity){
+            if(rand.nextInt(ImmortuosCalyx.config.INFECTEDAERIALRATE.get()) < 2){
+                ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
+                ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
+                for (Entity entity : entities){
+                    if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
+                }
+
+                for (LivingEntity livingEntities : realBois){
+                    livingEntities.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                        Double res = h.getResistance();
+                        Double chance = 100/res;
+                        int roll = rand.nextInt(100);
+                        if(roll < chance){
+                            h.setInfectionProgress(1);
+                        }
+                    });
+                }
+            }
+        }
+        else if (Lentity instanceof ZombieEntity){
+            if(rand.nextInt(ImmortuosCalyx.config.ZOMBIEAERIALRATE.get()) < 2){
+                ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
+                ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
+                for (Entity entity : entities){
+                    if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
+                }
+
+                for (LivingEntity livingEntities : realBois){
+                    livingEntities.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                        Double res = h.getResistance();
+                        Double chance = 100/res;
+                        int roll = rand.nextInt(100);
+                        if(roll < chance){
+                            h.setInfectionProgress(1);
+                        }
+                    });
+                }
+            }
+        }
+        else {
+          if(rand.nextInt(ImmortuosCalyx.config.COMMONAERIALRATE.get()) < 2){
+              ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
+              ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
+              for (Entity entity : entities){
+                  if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
+              }
+
+              AtomicInteger integer = new AtomicInteger();
+              Lentity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                  integer.getAndSet(h.getInfectionProgress());
+              });
+
+              for (LivingEntity livingEntities : realBois){
+                  livingEntities.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                      Double res = h.getResistance();
+                      if (integer.get() > 150){integer.getAndSet(150);}
+                      Double chance = integer.get()/res;
+                      int roll = rand.nextInt(100);
+                      if(roll < chance){
+                          h.setInfectionProgress(1);
+                      }
+                  });
+              }
+          }
+        }
+    }
+
+//    @SubscribeEvent
+//    public static void TestAABB(LivingEvent.LivingUpdateEvent event){
+//        if(event.getEntityLiving() instanceof InfectedDiverEntity){
+//            InfectedDiverEntity diver = (InfectedDiverEntity) event.getEntityLiving();
+//            ArrayList<Entity> entities = (ArrayList<Entity>) diver.world.getEntitiesInAABBexcluding(diver, new AxisAlignedBB((diver.getPosX() - 4), (diver.getPosY() - 4), (diver.getPosZ() - 4), (diver.getPosX() + 4), (diver.getPosY() + 4), (diver.getPosZ() + 4)), null);
+//            ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
+//            for (Entity entity : entities){
+//                if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
+//            }
+//
+//            for (LivingEntity boi : realBois){
+//                boi.addPotionEffect(new EffectInstance(Effects.BLINDNESS, 50, 1, true, false));
+//            }
+//        }
+//    }
 }

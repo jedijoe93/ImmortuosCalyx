@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class InfectedVillagerEntity extends MonsterEntity {
+public class InfectedVillagerEntity extends MonsterEntity implements InfectedEntity {
 
 
     public InfectedVillagerEntity(EntityType<InfectedVillagerEntity> type, World worldIn) {

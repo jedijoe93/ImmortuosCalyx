@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class InfectedDiverEntity extends DrownedEntity {
+public class InfectedDiverEntity extends DrownedEntity implements InfectedEntity {
 
 
     public InfectedDiverEntity(EntityType<InfectedDiverEntity> type, World worldIn) {
