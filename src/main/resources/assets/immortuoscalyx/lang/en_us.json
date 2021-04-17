@@ -2,6 +2,7 @@
   "death.attack.infection": "%1$s fell to the parasite",
   "death.attack.internaldamage": "%1$s fell to internal organ damage",
   "entity.immortuoscalyx.infectedhuman": "Infected Human",
+  "entity.immortuoscalyx.infectedplayer": "Infected Player",
   "entity.immortuoscalyx.infecteddiver": "Infected Diver",
   "entity.immortuoscalyx.infectedvillager": "Infected Villager",
   "entity.immortuoscalyx.infectedig": "Infected Iron Golem",

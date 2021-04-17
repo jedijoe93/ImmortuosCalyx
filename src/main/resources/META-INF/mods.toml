@@ -17,7 +17,7 @@ license="MIT"
 # The modid of the mod
 modId="immortuoscalyx" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-version="1.2.1" #mandatory
+version="1.3" #mandatory
  # A display name for the mod
 displayName="Immortuos Calyx" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
@@ -27,15 +27,12 @@ displayName="Immortuos Calyx" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="The forge team, and the MMD community" #optional
+credits="The forge team, and the MMD community. As well as Henkelmax" #optional
 # A text field displayed in the mod UI
-authors="jedijoe__" #optional
+authors="Cartoonish Villain" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A new parasitic infection has spread across the world. Try not to get infected...
-
-Inspired by the Velonaceps Calyx from Barotrauma
-'''
+A new parasitic infection has spread across the world. Try not to get infected... Inspired by the Velonaceps Calyx from Barotrauma.'''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.examplemod]] #optional
     # the modid of the dependency
