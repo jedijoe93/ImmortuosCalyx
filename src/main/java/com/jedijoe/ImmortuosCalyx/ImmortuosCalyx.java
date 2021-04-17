@@ -6,6 +6,7 @@ import com.jedijoe.ImmortuosCalyx.Configs.Configuration;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
 import com.jedijoe.ImmortuosCalyx.Entity.InfectedIGEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.InfectedPlayerEntity;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -58,6 +59,8 @@ public class ImmortuosCalyx
             GlobalEntityTypeAttributes.put(Register.INFECTEDDIVER.get(), InfectedDiverEntity.customAttributes().create());
             GlobalEntityTypeAttributes.put(Register.INFECTEDVILLAGER.get(), InfectedDiverEntity.customAttributes().create());
             GlobalEntityTypeAttributes.put(Register.INFECTEDIG.get(), InfectedIGEntity.customAttributes().create());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDPLAYER.get(), InfectedPlayerEntity.customAttributes().create());
+
         });
     }
 

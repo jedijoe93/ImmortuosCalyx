@@ -4,10 +4,12 @@ import com.jedijoe.ImmortuosCalyx.Entity.*;
 import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Register;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,6 +23,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -124,7 +127,12 @@ public class EntityInfectionEventManager {
             World world = event.getEntityLiving().getEntityWorld();
             if(!world.isRemote()){
                 ServerWorld serverWorld = (ServerWorld) world;
-                if(entity instanceof PlayerEntity){Register.INFECTEDHUMAN.get().spawn(serverWorld, new ItemStack(Items.AIR), null, entity.getPosition(), SpawnReason.TRIGGERED, true, false); }
+                if(entity instanceof PlayerEntity){
+                    InfectedPlayerEntity infectedPlayerEntity = new InfectedPlayerEntity(Register.INFECTEDPLAYER.get(), world);
+                    infectedPlayerEntity.setCustomName(entity.getName());
+                    infectedPlayerEntity.setUUID(entity.getUniqueID());
+                    infectedPlayerEntity.setPosition(entity.getPosX(), entity.getPosY() + 0.1, entity.getPosZ());
+                    world.addEntity(infectedPlayerEntity);}
                 else if(entity instanceof AbstractVillagerEntity){Register.INFECTEDVILLAGER.get().spawn(serverWorld, new ItemStack(Items.AIR), null, entity.getPosition(), SpawnReason.TRIGGERED, true, false); }
                 else if(entity instanceof IronGolemEntity){Register.INFECTEDIG.get().spawn(serverWorld, new ItemStack(Items.AIR), null, entity.getPosition(), SpawnReason.TRIGGERED, true, false);}
             }

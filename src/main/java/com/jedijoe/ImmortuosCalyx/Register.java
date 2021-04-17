@@ -2,10 +2,7 @@ package com.jedijoe.ImmortuosCalyx;
 
 import com.jedijoe.ImmortuosCalyx.Blocks.InfectionScanner;
 import com.jedijoe.ImmortuosCalyx.Blocks.ScannerBlockItem;
-import com.jedijoe.ImmortuosCalyx.Entity.InfectedDiverEntity;
-import com.jedijoe.ImmortuosCalyx.Entity.InfectedHumanEntity;
-import com.jedijoe.ImmortuosCalyx.Entity.InfectedIGEntity;
-import com.jedijoe.ImmortuosCalyx.Entity.InfectedVillagerEntity;
+import com.jedijoe.ImmortuosCalyx.Entity.*;
 import com.jedijoe.ImmortuosCalyx.Items.BaseItems;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
@@ -49,6 +46,8 @@ public class Register {
     public static final RegistryObject<EntityType<InfectedDiverEntity>> INFECTEDDIVER = ENTITY_TYPES.register("infecteddiver", () -> EntityType.Builder.create(InfectedDiverEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infecteddiver").toString()));
     public static final RegistryObject<EntityType<InfectedVillagerEntity>> INFECTEDVILLAGER = ENTITY_TYPES.register("infectedvillager", () -> EntityType.Builder.create(InfectedVillagerEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infectedvillager").toString()));
     public static final RegistryObject<EntityType<InfectedIGEntity>> INFECTEDIG = ENTITY_TYPES.register("infectedig", ()-> EntityType.Builder.create(InfectedIGEntity::new, EntityClassification.MONSTER).size(1.6f, 2.6f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infectedig").toString()));
+    public static final RegistryObject<EntityType<InfectedPlayerEntity>> INFECTEDPLAYER = ENTITY_TYPES.register("infectedplayer", ()-> EntityType.Builder.create(InfectedPlayerEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infectedplayer").toString()));
+
 
     public static final RegistryObject<SoundEvent> HUMANAMBIENT = SOUND_EVENT.register("infected_idle", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infected_idle")));
     public static final RegistryObject<SoundEvent> HUMANHURT = SOUND_EVENT.register("infected_hurt", () -> new SoundEvent(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infected_hurt")));

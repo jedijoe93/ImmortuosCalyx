@@ -18,5 +18,6 @@ public class ClientEntityRendererHandler {
         RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDDIVER.get(), RenderInfectedDiverEntity::new);
         RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDVILLAGER.get(), RenderInfectedVillagerEntity::new);
         RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDIG.get(), RenderInfectedIGEntity::new);
+        RenderingRegistry.registerEntityRenderingHandler(Register.INFECTEDPLAYER.get(), RenderInfectedPlayerEntity::new);
     }
 }

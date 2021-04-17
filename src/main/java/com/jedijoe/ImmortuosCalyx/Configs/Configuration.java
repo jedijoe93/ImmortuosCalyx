@@ -94,12 +94,14 @@ public class Configuration {
         this.EFFECTSPEED = subscriber.subscribe(builder.comment("Changes when the speed/slowdown side effects occurs").defineInRange("effectSpeedTime", 60, 0, Integer.MAX_VALUE));
         this.EFFECTSTRENGTH = subscriber.subscribe(builder.comment("Changes then the strength/weakness side effects occurs").defineInRange("effectStrengthTime", 85, 0, Integer.MAX_VALUE));
         this.EFFECTBLIND = subscriber.subscribe(builder.comment("Changes then the blindness side effects occur").defineInRange("effectBlindnessTime", 95, 0, Integer.MAX_VALUE));
-        this.EFFECTDAMAGE = subscriber.subscribe(builder.comment("Changes when players will be attacked by the parasite").defineInRange("effectAttackTime", 100, 0, Integer.MAX_VALUE));
+        //TODO: Change back to default 100
+        this.EFFECTDAMAGE = subscriber.subscribe(builder.comment("Changes when players will be attacked by the parasite").defineInRange("effectAttackTime", 1, 0, Integer.MAX_VALUE));
         builder.pop();
 
         builder.comment("Modify other properties of the mod, for the more wacky fun times.").push(SCATEGORY_OTHERS);
         this.EGGINFECTIONSTART = subscriber.subscribe(builder.comment("Changes how much infection is given to an entity when injected with the Immortuos eggs").define("infectAmountEgg", 1));
-        this.INFECTIONDAMAGE = subscriber.subscribe(builder.comment("Changes how much damage the infection deals to players at 100%").define("infectionDamage", 1));
+        //TODO: Change back to default 1
+        this.INFECTIONDAMAGE = subscriber.subscribe(builder.comment("Changes how much damage the infection deals to players at 100%").define("infectionDamage", 20));
         this.PVPCONTAGIONRELIEF = subscriber.subscribe(builder.comment("Changes how much infecting other players relieves a player of the infection").define("infectionRelief", 5));
         this.PVPCONTAGIONAMOUNT = subscriber.subscribe(builder.comment("Changes how much you infect a player by infecting them via pvp").define("infectionPVPContagion", 1));
         this.INFECTIONTIMER = subscriber.subscribe(builder.comment("Changes how long it takes for the infection to go up 1% in ticks (assuming no lag, 20 per second)").define("infectionTicker", 450));

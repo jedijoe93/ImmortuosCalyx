@@ -1,47 +1,65 @@
 package com.jedijoe.ImmortuosCalyx.Entity;
 
-import com.jedijoe.ImmortuosCalyx.ImmortuosCalyx;
 import com.jedijoe.ImmortuosCalyx.Infection.InfectionManagerCapability;
 import com.jedijoe.ImmortuosCalyx.Register;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.monster.ZombifiedPiglinEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class InfectedHumanEntity extends MonsterEntity implements InfectedEntity {
+public class InfectedPlayerEntity extends MonsterEntity implements InfectedEntity {
+
+    private static final DataParameter<Optional<UUID>> PUUID = EntityDataManager.createKey(InfectedPlayerEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
 
-    public InfectedHumanEntity(EntityType<InfectedHumanEntity> type, World worldIn) {
+    public InfectedPlayerEntity(EntityType<InfectedPlayerEntity> type, World worldIn) {
         super(type, worldIn);
     }
+
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        getDataManager().register(PUUID, Optional.empty());
+    }
+
+
+    public void setUUID(UUID uuid){
+        this.getDataManager().set(PUUID, Optional.of(uuid));
+    }
+
+
+    public UUID getUUID(){
+        return getDataManager().get(PUUID).orElse(new UUID(0L,0L));
+    }
+
+    public void setname(ITextComponent name){setCustomName(name);}
 
     public static AttributeModifierMap.MutableAttribute customAttributes() {
         return MobEntity.func_233666_p_()
@@ -49,8 +67,6 @@ public class InfectedHumanEntity extends MonsterEntity implements InfectedEntity
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2D);
     }
-
-
 
     @Override
     protected void registerGoals() {
@@ -109,4 +125,5 @@ public class InfectedHumanEntity extends MonsterEntity implements InfectedEntity
             if(h.getInfectionProgress() < 100) h.setInfectionProgress(100);
         });
     }
+
 }
