@@ -63,11 +63,6 @@ public class InfectedHumanEntity extends MonsterEntity implements InfectedEntity
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
-        return false;
-    }
-
-    @Override
     protected int getExperiencePoints(PlayerEntity player) {
         return 5 + this.world.rand.nextInt(5);
     }
