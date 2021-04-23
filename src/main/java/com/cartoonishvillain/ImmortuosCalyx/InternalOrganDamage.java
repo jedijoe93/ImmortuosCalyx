@@ -10,7 +10,7 @@ public class InternalOrganDamage extends DamageSource {
     }
 
     public static DamageSource causeInternalDamage(Entity entity){
-        return (new EntityDamageSource("internaldamage", entity)).setDamageBypassesArmor().setDamageIsAbsolute();
+        return (new EntityDamageSource("internaldamage", entity)).bypassArmor().bypassMagic();
     }
 
 

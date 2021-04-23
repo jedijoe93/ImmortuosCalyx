@@ -22,7 +22,7 @@ public class PlayerSkinManager {
         if (players.containsKey(uuid.toString())) {
             return players.get(uuid.toString());
         } else {
-            GameProfile profile = SkullTileEntity.updateGameProfile(new GameProfile(uuid, name));
+            GameProfile profile = SkullTileEntity.updateGameprofile(new GameProfile(uuid, name));
             players.put(uuid.toString(), profile);
             return profile;
         }
@@ -30,10 +30,10 @@ public class PlayerSkinManager {
 
     public static ResourceLocation getSkin(GameProfile gameProfile) {
         Minecraft minecraft = Minecraft.getInstance();
-        Map<Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(gameProfile);
+        Map<Type, MinecraftProfileTexture> map = minecraft.getSkinManager().getInsecureSkinInformation(gameProfile);
 
         if (map.containsKey(Type.SKIN)) {
-            return minecraft.getSkinManager().loadSkin(map.get(Type.SKIN), Type.SKIN);
+            return minecraft.getSkinManager().registerTexture(map.get(Type.SKIN), Type.SKIN);
         } else {
             return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
         }

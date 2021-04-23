@@ -10,7 +10,7 @@ public class InfectionDamage extends DamageSource {
     }
 
     public static DamageSource causeInfectionDamage(Entity entity){
-        return (new EntityDamageSource("infection", entity)).setDamageBypassesArmor().setDamageIsAbsolute();
+        return (new EntityDamageSource("infection", entity)).bypassArmor().bypassMagic();
     }
 
 

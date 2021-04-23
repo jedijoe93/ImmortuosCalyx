@@ -56,11 +56,11 @@ public class ImmortuosCalyx
     {
         InfectionManagerCapability.register();
         DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(Register.INFECTEDHUMAN.get(), InfectedHumanEntity.customAttributes().create());
-            GlobalEntityTypeAttributes.put(Register.INFECTEDDIVER.get(), InfectedDiverEntity.customAttributes().create());
-            GlobalEntityTypeAttributes.put(Register.INFECTEDVILLAGER.get(), InfectedDiverEntity.customAttributes().create());
-            GlobalEntityTypeAttributes.put(Register.INFECTEDIG.get(), InfectedIGEntity.customAttributes().create());
-            GlobalEntityTypeAttributes.put(Register.INFECTEDPLAYER.get(), InfectedPlayerEntity.customAttributes().create());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDHUMAN.get(), InfectedHumanEntity.customAttributes().build());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDDIVER.get(), InfectedDiverEntity.customAttributes().build());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDVILLAGER.get(), InfectedDiverEntity.customAttributes().build());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDIG.get(), InfectedIGEntity.customAttributes().build());
+            GlobalEntityTypeAttributes.put(Register.INFECTEDPLAYER.get(), InfectedPlayerEntity.customAttributes().build());
 
         });
     }
@@ -85,7 +85,7 @@ public class ImmortuosCalyx
     }
     public static final ItemGroup TAB = new ItemGroup("ImmortuosCalyx") {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(Register.IMMORTUOSCALYXEGGS.get());
         }
     };

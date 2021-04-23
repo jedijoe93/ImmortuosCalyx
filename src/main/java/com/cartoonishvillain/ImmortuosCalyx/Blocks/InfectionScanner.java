@@ -16,29 +16,31 @@ import net.minecraftforge.common.ToolType;
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class InfectionScanner extends Block {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public InfectionScanner() {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(3f).harvestTool(ToolType.PICKAXE).setRequiresTool());
-        this.setDefaultState(getDefaultState().with(POWERED, false));
+        super(Properties.of(Material.STONE).strength(3f).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops());
+        this.registerDefaultState(defaultBlockState().setValue(POWERED, false));
     }
 
     @Override
-    public boolean canProvidePower(BlockState p_149744_1_) {
+    public boolean isSignalSource(BlockState p_149744_1_) {
         return true;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
     }
 
     @Override
-    public void onEntityWalk(World world, BlockPos blockPos, Entity entity) {
+    public void stepOn(World world, BlockPos blockPos, Entity entity) {
         BlockState blockState = world.getBlockState(blockPos);
-        if(!world.isRemote()){
+        if(!world.isClientSide()){
         blockState = redstoneStrength(entity, blockState);}
-        world.setBlockState(blockPos, blockState.with(POWERED, blockState.get(POWERED)));
+        world.setBlockAndUpdate(blockPos, blockState.setValue(POWERED, blockState.getValue(POWERED)));
     }
 
     @Nonnull
@@ -48,9 +50,9 @@ public class InfectionScanner extends Block {
             isinfected.set(h.getInfectionProgress() > 0);
         });
         boolean logic = isinfected.get();
-        return state.with(POWERED, logic);
+        return state.setValue(POWERED, logic);
     }
     @Override
-    public int getWeakPower (BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) { return state.get(POWERED) ? 15 : 0; }
+    public int getSignal (BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) { return state.getValue(POWERED) ? 15 : 0; }
 
 }

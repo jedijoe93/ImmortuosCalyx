@@ -27,30 +27,30 @@ public class InfectedDiverEntity extends DrownedEntity implements InfectedEntity
     }
 
     public static AttributeModifierMap.MutableAttribute customAttributes() {
-        return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3F)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2D)
-                .createMutableAttribute(Attributes.ZOMBIE_SPAWN_REINFORCEMENTS, 0D);
+        return MobEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.3F)
+                .add(Attributes.ATTACK_DAMAGE, 2D)
+                .add(Attributes.SPAWN_REINFORCEMENTS_CHANCE, 0D);
     }
 
 
     @Override
-    public boolean shouldAttack(@Nullable LivingEntity entity) {
+    public boolean okTarget(@Nullable LivingEntity entity) {
         if(entity != null){
             AtomicBoolean infectedThreshold = new AtomicBoolean(false);
             entity.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
                 if(h.getInfectionProgress() >= 50) infectedThreshold.set(true);
             });
             if(infectedThreshold.get()) return false;
-            return !this.world.isDaytime() || entity.isInWater();
+            return !this.level.isDay() || entity.isInWater();
 
        }else return false;
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 5 + this.world.rand.nextInt(7);
+    protected int getExperienceReward(PlayerEntity player) {
+        return 5 + this.level.random.nextInt(7);
     }
 
     @Override
@@ -64,15 +64,15 @@ public class InfectedDiverEntity extends DrownedEntity implements InfectedEntity
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_ZOMBIE_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.ZOMBIE_STEP, 0.15F, 1.0F);
     }
     @Override
-    public void setChild(boolean childZombie) {}
+    public void setBaby(boolean childZombie) {}
     @Override
-    protected boolean shouldBurnInDay() {return false;}
+    protected boolean isSunSensitive() {return false;}
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
         this.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
             if (h.getInfectionProgress() < 100) h.setInfectionProgress(100);
         });

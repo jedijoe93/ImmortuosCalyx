@@ -21,7 +21,7 @@ public class RenderInfectedIGEntity extends MobRenderer<InfectedIGEntity, IronGo
 
     private static class Model extends BipedModel<InfectedHumanEntity> {
         private static RenderType makeRenderType(ResourceLocation texture) {
-            RenderType normal = RenderType.getEntityTranslucent(texture);
+            RenderType normal = RenderType.entityTranslucent(texture);
             return normal;}
 
         Model() {
@@ -30,7 +30,7 @@ public class RenderInfectedIGEntity extends MobRenderer<InfectedIGEntity, IronGo
     }
 
     @Override
-    public ResourceLocation getEntityTexture(InfectedIGEntity entity) {
+    public ResourceLocation getTextureLocation(InfectedIGEntity entity) {
         return TEXTURE;
     }
 

@@ -17,7 +17,7 @@ public class BaseItems extends Item{
     String lore3;
     String lore4;
     public BaseItems(String lore1, String lore2, String lore3, String lore4) {
-        super(new Item.Properties().group(ImmortuosCalyx.TAB));
+        super(new Item.Properties().tab(ImmortuosCalyx.TAB));
         this.lore1 = lore1;
         this.lore2 = lore2;
         this.lore3 = lore3;
@@ -25,7 +25,7 @@ public class BaseItems extends Item{
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if(lore1 != ""){
             tooltip.add(new StringTextComponent(lore1));
             if(lore2 != ""){

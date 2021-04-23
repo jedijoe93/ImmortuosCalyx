@@ -19,7 +19,7 @@ public class BloodiedPlayerLayer extends LayerRenderer<InfectedPlayerEntity, Bip
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, InfectedPlayerEntity entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         if(!entitylivingbaseIn.isInvisible()){
-            renderCutoutModel(this.getEntityModel(), TEXTURE, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, 1.0F, 1.0F);
+            renderColoredCutoutModel(this.getParentModel(), TEXTURE, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, 1.0F, 1.0F, 1.0F);
         }
     }
 }

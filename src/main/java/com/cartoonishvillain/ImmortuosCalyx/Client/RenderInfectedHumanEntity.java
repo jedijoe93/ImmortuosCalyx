@@ -17,7 +17,7 @@ public class RenderInfectedHumanEntity extends BipedRenderer<InfectedHumanEntity
 
     private static class Model extends BipedModel<InfectedHumanEntity> {
         private static RenderType makeRenderType(ResourceLocation texture) {
-            RenderType normal = RenderType.getEntityTranslucent(texture);
+            RenderType normal = RenderType.entityTranslucent(texture);
             return normal;}
 
         Model() {
@@ -26,7 +26,7 @@ public class RenderInfectedHumanEntity extends BipedRenderer<InfectedHumanEntity
     }
 
     @Override
-    public ResourceLocation getEntityTexture(InfectedHumanEntity entity) {
+    public ResourceLocation getTextureLocation(InfectedHumanEntity entity) {
         return TEXTURE;
     }
 

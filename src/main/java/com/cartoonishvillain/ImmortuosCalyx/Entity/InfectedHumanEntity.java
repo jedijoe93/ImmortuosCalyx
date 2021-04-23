@@ -28,10 +28,10 @@ public class InfectedHumanEntity extends MonsterEntity implements InfectedEntity
     }
 
     public static AttributeModifierMap.MutableAttribute customAttributes() {
-        return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2D);
+        return MobEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.5D)
+                .add(Attributes.ATTACK_DAMAGE, 2D);
     }
 
 
@@ -63,8 +63,8 @@ public class InfectedHumanEntity extends MonsterEntity implements InfectedEntity
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
-        return 5 + this.world.rand.nextInt(5);
+    protected int getExperienceReward(PlayerEntity player) {
+        return 5 + this.level.random.nextInt(5);
     }
 
     @Override
@@ -78,12 +78,12 @@ public class InfectedHumanEntity extends MonsterEntity implements InfectedEntity
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(SoundEvents.ENTITY_ZOMBIE_STEP, 0.15F, 1.0F);
+        this.playSound(SoundEvents.ZOMBIE_STEP, 0.15F, 1.0F);
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
         this.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
             if(h.getInfectionProgress() < 100) h.setInfectionProgress(100);
         });

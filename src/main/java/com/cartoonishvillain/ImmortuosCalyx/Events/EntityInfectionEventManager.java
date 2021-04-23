@@ -73,27 +73,27 @@ public class EntityInfectionEventManager {
 
     public static void VillagerLogic(VillagerEntity entity, int level){
         if(level >= ImmortuosCalyx.config.VILLAGERSLOWTWO.get()){ // greater than or equal to 25
-            entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 2, false, false));
+            entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 5, 2, false, false));
         }  else if(level >= ImmortuosCalyx.config.VILLAGERSLOWONE.get()){ //5-24%
-            entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 1, false, false));
+            entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 5, 1, false, false));
         }
         if(level >= ImmortuosCalyx.config.VILLAGERLETHAL.get()){
             Random rand = new Random();
             int random = rand.nextInt(100);
             if(random < 1 && ImmortuosCalyx.config.INFECTIONDAMAGE.get() > 0){
-                entity.attackEntityFrom(InfectionDamage.causeInfectionDamage(entity), ImmortuosCalyx.config.INFECTIONDAMAGE.get());
+                entity.hurt(InfectionDamage.causeInfectionDamage(entity), ImmortuosCalyx.config.INFECTIONDAMAGE.get());
             }
         }
     }
 
     public static void IGLogic(IronGolemEntity entity, int level){
-        if(level >= ImmortuosCalyx.config.IRONGOLEMSLOW.get()){ entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 5, 1, false, false)); }
-        if(level >= ImmortuosCalyx.config.IRONGOLEMWEAK.get()){ entity.addPotionEffect(new EffectInstance(Effects.WEAKNESS, 5, 1, false, false)); }
+        if(level >= ImmortuosCalyx.config.IRONGOLEMSLOW.get()){ entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 5, 1, false, false)); }
+        if(level >= ImmortuosCalyx.config.IRONGOLEMWEAK.get()){ entity.addEffect(new EffectInstance(Effects.WEAKNESS, 5, 1, false, false)); }
         if(level >= ImmortuosCalyx.config.IRONGOLEMLETHAL.get()){
             Random rand = new Random();
             int random = rand.nextInt(100);
             if(random < 1 && ImmortuosCalyx.config.INFECTIONDAMAGE.get() > 0){
-                entity.attackEntityFrom(InfectionDamage.causeInfectionDamage(entity), ImmortuosCalyx.config.INFECTIONDAMAGE.get());
+                entity.hurt(InfectionDamage.causeInfectionDamage(entity), ImmortuosCalyx.config.INFECTIONDAMAGE.get());
             }
         }
     }
@@ -101,14 +101,14 @@ public class EntityInfectionEventManager {
 
     @SubscribeEvent
     public static void antiTrade(PlayerInteractEvent.EntityInteract event) {//villager specific interaction modifier.
-        if(!event.getTarget().getEntityWorld().isRemote() && event.getHand() == Hand.MAIN_HAND){
+        if(!event.getTarget().getCommandSenderWorld().isClientSide() && event.getHand() == Hand.MAIN_HAND){
             if(event.getTarget() instanceof VillagerEntity){
             VillagerEntity villager = (VillagerEntity) event.getTarget();
             villager.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
                 if(h.getInfectionProgress() >= ImmortuosCalyx.config.VILLAGERNOTRADE.get()){
                     event.setCanceled(true);
-                    villager.setShakeHeadTicks(40);
-                    villager.getEntityWorld().playSound(null, villager.getPosX(), villager.getPosY(), villager.getPosZ(), Register.VILIDLE.get(), SoundCategory.NEUTRAL, 1f, 1f);
+                    villager.setUnhappyCounter(40);
+                    villager.getCommandSenderWorld().playSound(null, villager.getX(), villager.getY(), villager.getZ(), Register.VILIDLE.get(), SoundCategory.NEUTRAL, 1f, 1f);
                 }
             });
             }
@@ -118,18 +118,18 @@ public class EntityInfectionEventManager {
     @SubscribeEvent
     public static void deathEntityReplacement(LivingDeathEvent event){
         LivingEntity entity = event.getEntityLiving();
-        if (event.getSource().damageType.equals("infection")){
-            World world = event.getEntityLiving().getEntityWorld();
-            if(!world.isRemote()){
+        if (event.getSource().msgId.equals("infection")){
+            World world = event.getEntityLiving().getCommandSenderWorld();
+            if(!world.isClientSide()){
                 ServerWorld serverWorld = (ServerWorld) world;
                 if(entity instanceof PlayerEntity){
                     InfectedPlayerEntity infectedPlayerEntity = new InfectedPlayerEntity(Register.INFECTEDPLAYER.get(), world);
                     infectedPlayerEntity.setCustomName(entity.getName());
-                    infectedPlayerEntity.setUUID(entity.getUniqueID());
-                    infectedPlayerEntity.setPosition(entity.getPosX(), entity.getPosY() + 0.1, entity.getPosZ());
-                    world.addEntity(infectedPlayerEntity);}
-                else if(entity instanceof AbstractVillagerEntity){Register.INFECTEDVILLAGER.get().spawn(serverWorld, new ItemStack(Items.AIR), null, entity.getPosition(), SpawnReason.TRIGGERED, true, false); }
-                else if(entity instanceof IronGolemEntity){Register.INFECTEDIG.get().spawn(serverWorld, new ItemStack(Items.AIR), null, entity.getPosition(), SpawnReason.TRIGGERED, true, false);}
+                    infectedPlayerEntity.setUUID(entity.getUUID());
+                    infectedPlayerEntity.setPos(entity.getX(), entity.getY() + 0.1, entity.getZ());
+                    world.addFreshEntity(infectedPlayerEntity);}
+                else if(entity instanceof AbstractVillagerEntity){Register.INFECTEDVILLAGER.get().spawn(serverWorld, new ItemStack(Items.AIR), null, entity.blockPosition(), SpawnReason.TRIGGERED, true, false); }
+                else if(entity instanceof IronGolemEntity){Register.INFECTEDIG.get().spawn(serverWorld, new ItemStack(Items.AIR), null, entity.blockPosition(), SpawnReason.TRIGGERED, true, false);}
             }
         }
     }
@@ -141,7 +141,7 @@ public class EntityInfectionEventManager {
 
         if (Lentity instanceof InfectedEntity){
             if(rand.nextInt(ImmortuosCalyx.config.INFECTEDAERIALRATE.get()) < 2){
-                ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
+                ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.level.getEntities(Lentity, new AxisAlignedBB((Lentity.getX() - 4), (Lentity.getY() - 4), (Lentity.getZ() - 4), (Lentity.getX() + 4), (Lentity.getY() + 4), (Lentity.getZ() + 4)), null);
                 ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
                 for (Entity entity : entities){
                     if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
@@ -161,7 +161,7 @@ public class EntityInfectionEventManager {
         }
         else if (Lentity instanceof ZombieEntity){
             if(rand.nextInt(ImmortuosCalyx.config.ZOMBIEAERIALRATE.get()) < 2){
-                ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
+                ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.level.getEntities(Lentity, new AxisAlignedBB((Lentity.getX() - 4), (Lentity.getY() - 4), (Lentity.getZ() - 4), (Lentity.getX() + 4), (Lentity.getY() + 4), (Lentity.getZ() + 4)), null);
                 ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
                 for (Entity entity : entities){
                     if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
@@ -181,7 +181,7 @@ public class EntityInfectionEventManager {
         }
         else {
           if(rand.nextInt(ImmortuosCalyx.config.COMMONAERIALRATE.get()) < 2){
-              ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
+              ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.level.getEntities(Lentity, new AxisAlignedBB((Lentity.getX() - 4), (Lentity.getY() - 4), (Lentity.getZ() - 4), (Lentity.getX() + 4), (Lentity.getY() + 4), (Lentity.getZ() + 4)), null);
               ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
               for (Entity entity : entities){
                   if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
