@@ -11,6 +11,11 @@
   "item.immortuoscalyx.antiparasitic": "Anti Parasitic",
   "item.immortuoscalyx.immortuoseggs": "Immortuos Eggs",
   "item.immortuoscalyx.syringe": "Syringe",
+  "item.immortuoscalyx.infhuman_spawn_egg": "Infected Human Spawn Egg",
+  "item.immortuoscalyx.infdiver_spawn_egg": "Infected Diver Spawn Egg",
+  "item.immortuoscalyx.infvillager_spawn_egg": "Infected Villager Spawn Egg",
+  "item.immortuoscalyx.infig_spawn_egg": "Infected Iron Golem Spawn Egg",
+  "item.immortuoscalyx.infplayer_spawn_egg": "Infected Player Spawn Egg",
   "item.immortuoscalyx.healthscanner": "Health Scanner",
   "itemGroup.ImmortuosCalyx": "Immortuos Calyx"
 }

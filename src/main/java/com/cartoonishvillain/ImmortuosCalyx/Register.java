@@ -4,6 +4,7 @@ import com.cartoonishvillain.ImmortuosCalyx.Blocks.InfectionScanner;
 import com.cartoonishvillain.ImmortuosCalyx.Blocks.ScannerBlockItem;
 import com.cartoonishvillain.ImmortuosCalyx.Entity.*;
 import com.cartoonishvillain.ImmortuosCalyx.Items.BaseItems;
+import com.cartoonishvillain.ImmortuosCalyx.Items.ImmortuosSpawnEggItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -38,6 +39,11 @@ public class Register {
     public static final RegistryObject<Item> IMMORTUOSCALYXEGGS = ITEMS.register("immortuoseggs", () -> new BaseItems(TextFormatting.RED + "Infects humans with the Immortuos Calyx Parasite,", TextFormatting.GRAY + "Obtained through syringe extraction from fully converted entities", "", ""));
     public static final RegistryObject<Item> SYRINGE = ITEMS.register("syringe", () -> new BaseItems(TextFormatting.GRAY + "Allows you to harvest biomaterials necessary to make medicines", "", "", ""));
     public static final RegistryObject<Item> SCANNER = ITEMS.register("healthscanner", () -> new BaseItems(TextFormatting.BLUE + "Gives you information about infection", TextFormatting.BLUE + "levels in players, and yourself.",TextFormatting.GRAY + "Shift rightclick to view your stats,", TextFormatting.GRAY + "left click players to view theirs."));
+    public static final RegistryObject<Item> INFECTEDHUMANSPAWN = ITEMS.register("infhuman_spawn_egg", () -> new ImmortuosSpawnEggItem(Register.INFECTEDHUMAN, 2565927, 5065244, new Item.Properties().group(ImmortuosCalyx.TAB)));
+    public static final RegistryObject<Item> INFECTEDDIVERSPAWN = ITEMS.register("infdiver_spawn_egg", () -> new ImmortuosSpawnEggItem(Register.INFECTEDDIVER, 2565927, 5065244, new Item.Properties().group(ImmortuosCalyx.TAB)));
+    public static final RegistryObject<Item> INFECTEDVILLAGERSPAWN = ITEMS.register("infvillager_spawn_egg", () -> new ImmortuosSpawnEggItem(Register.INFECTEDVILLAGER, 2565927, 5065244, new Item.Properties().group(ImmortuosCalyx.TAB)));
+    public static final RegistryObject<Item> INFECTEDIGSPAWN = ITEMS.register("infig_spawn_egg", () -> new ImmortuosSpawnEggItem(Register.INFECTEDIG, 2565927, 5065244, new Item.Properties().group(ImmortuosCalyx.TAB)));
+    public static final RegistryObject<Item> INFECTEDPLAYERSPAWN = ITEMS.register("infplayer_spawn_egg", () -> new ImmortuosSpawnEggItem(Register.INFECTEDPLAYER, 2565927, 5065244, new Item.Properties().group(ImmortuosCalyx.TAB)));
 
     public static final RegistryObject<EntityType<InfectedHumanEntity>> INFECTEDHUMAN = ENTITY_TYPES.register("infectedhuman", () -> EntityType.Builder.create(InfectedHumanEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infectedhuman").toString()));
     public static final RegistryObject<EntityType<InfectedDiverEntity>> INFECTEDDIVER = ENTITY_TYPES.register("infecteddiver", () -> EntityType.Builder.create(InfectedDiverEntity::new, EntityClassification.MONSTER).size(0.6f, 1.95f).build(new ResourceLocation(ImmortuosCalyx.MOD_ID, "infecteddiver").toString()));
