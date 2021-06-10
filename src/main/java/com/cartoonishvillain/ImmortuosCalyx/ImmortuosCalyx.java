@@ -12,6 +12,7 @@ import com.cartoonishvillain.ImmortuosCalyx.Infection.InfectionManagerCapability
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -26,6 +27,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("immortuoscalyx")
 public class ImmortuosCalyx
@@ -33,6 +36,7 @@ public class ImmortuosCalyx
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "immortuoscalyx";
+    public static ArrayList<ResourceLocation> DimensionExclusion;
     public static ServerConfig config;
     public static CommonConfig commonConfig;
     public ImmortuosCalyx() {

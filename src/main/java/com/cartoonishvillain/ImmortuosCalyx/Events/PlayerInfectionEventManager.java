@@ -106,7 +106,7 @@ public class PlayerInfectionEventManager {
     }
 
     @SubscribeEvent public static void InfectOtherPlayer(AttackEntityEvent event){
-        if(event.getEntity() instanceof PlayerEntity && event.getTarget() instanceof PlayerEntity && ImmortuosCalyx.config.PVPCONTAGION.get()){
+        if(event.getEntity() instanceof PlayerEntity && event.getTarget() instanceof PlayerEntity && ImmortuosCalyx.config.PVPCONTAGION.get() && (!ImmortuosCalyx.DimensionExclusion.contains(event.getTarget().world.getDimensionKey().getLocation()) || !ImmortuosCalyx.commonConfig.PLAYERINFECTIONINCLEANSE.get())){
             PlayerEntity target = (PlayerEntity) event.getTarget(); //the player who got hit
             PlayerEntity aggro = (PlayerEntity) event.getEntity(); //the player that hit
             int protection = target.getTotalArmorValue(); //grabs the armor value of the target
@@ -143,7 +143,7 @@ public class PlayerInfectionEventManager {
     }
 
     @SubscribeEvent public static void InfectFromMobAttack(net.minecraftforge.event.entity.living.LivingAttackEvent event){
-        if (event.getSource().getTrueSource() instanceof LivingEntity) {
+        if (event.getSource().getTrueSource() instanceof LivingEntity && (!ImmortuosCalyx.DimensionExclusion.contains(event.getEntity().world.getDimensionKey().getLocation()) || !ImmortuosCalyx.commonConfig.HOSTILEINFECTIONINCLEANSE.get())) {
             LivingEntity aggro = (LivingEntity) event.getSource().getTrueSource();
             LivingEntity target = event.getEntityLiving();
             int convert = 0;
@@ -198,7 +198,7 @@ public class PlayerInfectionEventManager {
     static Item[] rawItem = new Item[]{Items.BEEF, Items.RABBIT, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.COD, Items.SALMON, Items.ROTTEN_FLESH};
     @SubscribeEvent
     public static void rawFood(LivingEntityUseItemEvent.Finish event){
-        if(event.getEntity() instanceof PlayerEntity){
+        if(event.getEntity() instanceof PlayerEntity && (!ImmortuosCalyx.DimensionExclusion.contains(event.getEntity().world.getDimensionKey().getLocation()) || !ImmortuosCalyx.commonConfig.RAWFOODINFECTIONINCLEANSE.get())){
             PlayerEntity player = (PlayerEntity) event.getEntity();
             boolean raw = false;
             for(Item item : rawItem){if(item.equals(event.getItem().getItem())){raw = true; break;}}

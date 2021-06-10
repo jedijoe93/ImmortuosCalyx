@@ -1,5 +1,6 @@
 package com.cartoonishvillain.ImmortuosCalyx.Events;
 
+import com.cartoonishvillain.ImmortuosCalyx.Configs.CommonConfig;
 import com.cartoonishvillain.ImmortuosCalyx.Entity.InfectedDiverEntity;
 import com.cartoonishvillain.ImmortuosCalyx.Entity.InfectedHumanEntity;
 import com.cartoonishvillain.ImmortuosCalyx.Entity.InfectedIGEntity;
@@ -22,6 +23,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -221,5 +223,10 @@ public class NonInfectionEvents {
         });
     }
 
+
+    @SubscribeEvent
+    public static void BiomeLoad(BiomeLoadingEvent event){
+        ImmortuosCalyx.DimensionExclusion = CommonConfig.getDimensions();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.cartoonishvillain.ImmortuosCalyx.Events;
 
+import com.cartoonishvillain.ImmortuosCalyx.Configs.CommonConfig;
 import com.cartoonishvillain.ImmortuosCalyx.Entity.Spawns;
 import com.cartoonishvillain.ImmortuosCalyx.ImmortuosCalyx;
 import com.cartoonishvillain.ImmortuosCalyx.Items.ImmortuosSpawnEggItem;

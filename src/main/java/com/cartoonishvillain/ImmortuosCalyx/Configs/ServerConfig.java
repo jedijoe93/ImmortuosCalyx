@@ -62,6 +62,8 @@ public class ServerConfig {
     public ConfigHelper.ConfigValueListener<Integer> IRONGOLEMLETHAL;
 
 
+
+
     public ServerConfig(ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber){
         builder.comment("Modify Infection Components").push(SCATEGORY_SYMPTOMS);
         this.ANTICHAT = subscriber.subscribe(builder.comment("Enables or disables the blocking of an infected individual's chat messages at 40% infection.").define("enableInfectedChatBlock", true));
@@ -115,8 +117,7 @@ public class ServerConfig {
         this.IRONGOLEMSLOW = subscriber.subscribe(builder.comment("How much infection an iron golem needs to be slowed down").define("igSlow", 30));
         this.IRONGOLEMWEAK = subscriber.subscribe(builder.comment("How much infection an iron golem needs to be weakened").define("igWeak", 65));
         this.IRONGOLEMLETHAL = subscriber.subscribe(builder.comment("How much infection an iron golem needs to have the infection be lethal").define("igDeath", 110));
-
-
+        builder.pop();
 
     }
 
@@ -129,4 +130,6 @@ public class ServerConfig {
         configData.load();;
         spec.setConfig(configData);
     }
+
+
 }

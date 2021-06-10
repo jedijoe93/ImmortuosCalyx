@@ -140,44 +140,52 @@ public class EntityInfectionEventManager {
         Random rand = new Random();
 
         if (Lentity instanceof InfectedEntity){
-            if(rand.nextInt(ImmortuosCalyx.config.INFECTEDAERIALRATE.get()) < 2){
+            if (!ImmortuosCalyx.DimensionExclusion.contains(Lentity.world.getDimensionKey().getLocation()) || !ImmortuosCalyx.commonConfig.HOSTILEAEROSOLINFECTIONINCLEANSE.get()) {
+                if (rand.nextInt(ImmortuosCalyx.config.INFECTEDAERIALRATE.get()) < 2) {
+                    ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
+                    ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
+                    for (Entity entity : entities) {
+                        if (entity instanceof LivingEntity) {
+                            realBois.add((LivingEntity) entity);
+                        }
+                    }
+
+                    for (LivingEntity livingEntities : realBois) {
+                        livingEntities.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
+                            Double res = h.getResistance();
+                            Double chance = 100 / res;
+                            int roll = rand.nextInt(100);
+                            if (roll < chance) {
+                                h.setInfectionProgress(1);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+        else if (Lentity instanceof ZombieEntity) {
+            if (!ImmortuosCalyx.DimensionExclusion.contains(Lentity.world.getDimensionKey().getLocation()) || !ImmortuosCalyx.commonConfig.HOSTILEAEROSOLINFECTIONINCLEANSE.get()) {
+                if (rand.nextInt(ImmortuosCalyx.config.ZOMBIEAERIALRATE.get()) < 2) {
                 ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
                 ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
-                for (Entity entity : entities){
-                    if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
+                for (Entity entity : entities) {
+                    if (entity instanceof LivingEntity) {
+                        realBois.add((LivingEntity) entity);
+                    }
                 }
 
-                for (LivingEntity livingEntities : realBois){
-                    livingEntities.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
+                for (LivingEntity livingEntities : realBois) {
+                    livingEntities.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h -> {
                         Double res = h.getResistance();
-                        Double chance = 100/res;
+                        Double chance = 100 / res;
                         int roll = rand.nextInt(100);
-                        if(roll < chance){
+                        if (roll < chance) {
                             h.setInfectionProgress(1);
                         }
                     });
                 }
             }
         }
-        else if (Lentity instanceof ZombieEntity){
-            if(rand.nextInt(ImmortuosCalyx.config.ZOMBIEAERIALRATE.get()) < 2){
-                ArrayList<Entity> entities = (ArrayList<Entity>) Lentity.world.getEntitiesInAABBexcluding(Lentity, new AxisAlignedBB((Lentity.getPosX() - 4), (Lentity.getPosY() - 4), (Lentity.getPosZ() - 4), (Lentity.getPosX() + 4), (Lentity.getPosY() + 4), (Lentity.getPosZ() + 4)), null);
-                ArrayList<LivingEntity> realBois = new ArrayList<LivingEntity>();
-                for (Entity entity : entities){
-                    if (entity instanceof LivingEntity){realBois.add((LivingEntity) entity);}
-                }
-
-                for (LivingEntity livingEntities : realBois){
-                    livingEntities.getCapability(InfectionManagerCapability.INSTANCE).ifPresent(h->{
-                        Double res = h.getResistance();
-                        Double chance = 100/res;
-                        int roll = rand.nextInt(100);
-                        if(roll < chance){
-                            h.setInfectionProgress(1);
-                        }
-                    });
-                }
-            }
         }
         else {
           if(rand.nextInt(ImmortuosCalyx.config.COMMONAERIALRATE.get()) < 2){
